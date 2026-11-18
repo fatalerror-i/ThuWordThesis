@@ -1,0 +1,29 @@
+# 默认按文本处理，提交时统一为 LF；检出时保留仓库约定
+* text=auto
+
+# 源码与配置文件
+*.py text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.xml text eol=lf
+*.txt text eol=lf
+*.bas text eol=crlf
+*.frm text eol=crlf
+
+# Office 与二进制交付物：禁止换行转换
+*.doc binary
+*.docx binary
+*.docm binary
+*.dot binary
+*.dotx binary
+*.dotm binary
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.bmp binary
+*.xlsx binary
+*.pptx binary

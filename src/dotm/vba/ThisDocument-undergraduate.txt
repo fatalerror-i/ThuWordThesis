@@ -1,0 +1,5 @@
+Option Explicit
+
+' 本科综合论文训练模板：封面为静态内容，无学位级联 / 成文日期联动，
+' 因此 ThisDocument 模块不注册 Document_ContentControlOnExit 事件。
+' 本文件的代码由构建脚本 src/build_dotm.py 写入 ThisDocument 模块，请勿手改。

@@ -1,0 +1,10 @@
+"""两版封面共用的示例信息。院系、作者和导师取自 ThuThesis。"""
+
+DEPARTMENT = "计算机科学与技术系"
+DISCIPLINE = "计算机科学与技术"
+AUTHOR = "薛瑞尼"
+AUTHOR_ENGLISH = "Xue Ruini"
+SUPERVISOR = "郑纬民　教授"
+SUPERVISOR_ENGLISH = "Professor Zheng Weimin"
+DATE_CHINESE = "二〇二六年十一月"
+DATE_ENGLISH = "November, 2026"

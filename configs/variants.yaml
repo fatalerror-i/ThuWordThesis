@@ -1,0 +1,34 @@
+# 双变体注册表：构建时按 --variant 选择，新增变体只需在此登记一份。
+# 所有路径相对仓库根目录；默认产物名可通过 --docx、--out 和 --pdf 覆盖。
+# 本科与研究生共用样式引擎、实现映射、学位候选、VBA 模块和窗体；
+# 差异集中在规则、内容模块、封面资源、功能区、ThisDocument 与页眉装饰。
+# 键名 lowerCamelCase，值为路径或开关；本文件不参与 validate_rules.py 的结构校验。
+
+graduate:
+  label: 研究生学位论文
+  rules: configs/thesis-format-rules-graduate.yaml
+  implementationMap: configs/implementation-map.yaml
+  degreeOptions: configs/degree-options.yaml
+  title: 清华大学研究生学位论文模板
+  docx: output/清华大学研究生学位论文模板.docx
+  dotm: output/清华大学研究生学位论文模板.dotm
+  pdf: output/template_preview-graduate.pdf
+  contentPackage: build.content.graduate
+  ribbon: src/dotm/customUI14-graduate.xml
+  thisDocument: src/dotm/vba/ThisDocument-graduate.txt
+  # 研究生版页眉有 STYLEREF 章名与下框线；本科版规范要求"页眉：无"。
+  decorateHeader: true
+
+undergraduate:
+  label: 本科生综合论文训练
+  rules: configs/thesis-format-rules-undergraduate.yaml
+  implementationMap: configs/implementation-map.yaml
+  degreeOptions: configs/degree-options.yaml
+  title: 清华大学综合论文训练论文模板
+  docx: output/清华大学综合论文训练论文模板.docx
+  dotm: output/清华大学综合论文训练论文模板.dotm
+  pdf: output/template_preview-undergraduate.pdf
+  contentPackage: build.content.undergraduate
+  ribbon: src/dotm/customUI14-undergraduate.xml
+  thisDocument: src/dotm/vba/ThisDocument-undergraduate.txt
+  decorateHeader: false

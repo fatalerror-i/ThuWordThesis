@@ -1,0 +1,122 @@
+{
+  "frmPicker": {
+    "caption": "选择条目",
+    "width": 580,
+    "height": 386,
+    "props": {
+      "StartUpPosition": 1
+    },
+    "controls": [
+      {
+        "name": "lblPrompt",
+        "progid": "Forms.Label.1",
+        "left": 12,
+        "top": 12,
+        "width": 550,
+        "height": 16,
+        "props": {
+          "Caption": "请选择："
+        }
+      },
+      {
+        "name": "lstItems",
+        "progid": "Forms.ListBox.1",
+        "left": 12,
+        "top": 31,
+        "width": 550,
+        "height": 282,
+        "props": {
+          "ListStyle": 1,
+          "MultiSelect": 1,
+          "IntegralHeight": false,
+          "BorderStyle": 1,
+          "TabIndex": 0
+        }
+      },
+      {
+        "name": "lblHint",
+        "progid": "Forms.Label.1",
+        "left": 12,
+        "top": 327,
+        "width": 348,
+        "height": 16,
+        "props": {
+          "Caption": ""
+        }
+      },
+      {
+        "name": "btnOK",
+        "progid": "Forms.CommandButton.1",
+        "left": 400,
+        "top": 324,
+        "width": 78,
+        "height": 23,
+        "props": {
+          "Caption": "插入(I)",
+          "Accelerator": "I",
+          "Default": true,
+          "TabIndex": 1
+        }
+      },
+      {
+        "name": "btnCancel",
+        "progid": "Forms.CommandButton.1",
+        "left": 484,
+        "top": 324,
+        "width": 78,
+        "height": 23,
+        "props": {
+          "Caption": "取消",
+          "Cancel": true,
+          "TabIndex": 2
+        }
+      }
+    ]
+  },
+  "frmReferenceCheck": {
+    "caption": "引用检查",
+    "width": 480,
+    "height": 335,
+    "props": {
+      "StartUpPosition": 1
+    },
+    "controls": [
+      {
+        "name": "lblSummary",
+        "progid": "Forms.Label.1",
+        "left": 12,
+        "top": 12,
+        "width": 450,
+        "height": 16,
+        "props": {
+          "Caption": ""
+        }
+      },
+      {
+        "name": "mpResults",
+        "progid": "Forms.MultiPage.1",
+        "left": 12,
+        "top": 33,
+        "width": 450,
+        "height": 220,
+        "props": {
+          "TabIndex": 0
+        }
+      },
+      {
+        "name": "btnClose",
+        "progid": "Forms.CommandButton.1",
+        "left": 384,
+        "top": 265,
+        "width": 78,
+        "height": 23,
+        "props": {
+          "Caption": "关闭",
+          "Default": true,
+          "Cancel": true,
+          "TabIndex": 1
+        }
+      }
+    ]
+  }
+}

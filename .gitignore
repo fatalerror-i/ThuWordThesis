@@ -1,0 +1,22 @@
+# 编辑器与系统
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+
+# 本地环境
+.env
+.env.*
+
+# Word / Office 临时与锁文件
+~$*
+*.tmp
+*.temp
+*.asd
+
+# 构建产物
+/output/*
+
+# 参考文件
+/references/*

@@ -1,0 +1,274 @@
+# 学位门类、学科名称和专业学位分别参照研究生指南附录C、D、F。
+# 交叉学科不直接作为授予学位名称；cross_disciplinary 单列目录归属。
+# discipline_awards 按《研究生教育学科专业目录（2022年）》补充可授学位门类，保留指南中的学科名称。
+# https://www.moe.gov.cn/srcsite/A22/moe_833/202209/t20220914_660828.html
+# 指南未列现行专业领域清单，按院系确认的名称手填；附录G仅适用2019级及之前。
+version: 1
+cover_defaults:
+  degree_cn: 工学硕士学位
+  discipline: 计算机科学与技术
+  discipline_en: Computer Science and Technology
+academic:
+- name_cn: 哲学
+  master_en: Master of Arts
+  doctor_en: Doctor of Philosophy
+  disciplines:
+  - 哲学
+- name_cn: 经济学
+  master_en: Master of Science
+  doctor_en: Doctor of Philosophy
+  disciplines:
+  - 理论经济学
+  - 应用经济学
+- name_cn: 法学
+  master_en: Master of Arts
+  doctor_en: Doctor of Philosophy
+  disciplines:
+  - 法学
+  - 政治学
+  - 社会学
+  - 马克思主义理论
+- name_cn: 教育学
+  master_en: Master of Arts
+  doctor_en: Doctor of Philosophy
+  disciplines:
+  - 教育学
+  - 心理学
+  - 体育学
+- name_cn: 文学
+  master_en: Master of Arts
+  doctor_en: Doctor of Philosophy
+  disciplines:
+  - 中国语言文学
+  - 外国语言文学
+  - 新闻传播学
+- name_cn: 历史学
+  master_en: Master of Arts
+  doctor_en: Doctor of Philosophy
+  disciplines:
+  - 中国史
+  - 世界史
+- name_cn: 理学
+  master_en: Master of Science
+  doctor_en: Doctor of Philosophy
+  disciplines:
+  - 数学
+  - 物理学
+  - 化学
+  - 天文学
+  - 大气科学
+  - 生物学
+  - 科学技术史
+  - 生态学
+  - 统计学
+- name_cn: 工学
+  master_en: Master of Science
+  doctor_en: Doctor of Philosophy
+  disciplines:
+  - 力学
+  - 机械工程
+  - 光学工程
+  - 仪器科学与技术
+  - 材料科学与工程
+  - 动力工程及工程热物理
+  - 电气工程
+  - 电子科学与技术
+  - 信息与通信工程
+  - 控制科学与工程
+  - 计算机科学与技术
+  - 建筑学
+  - 土木工程
+  - 水利工程
+  - 化学工程与技术
+  - 交通运输工程
+  - 航空宇航科学与技术
+  - 核科学与技术
+  - 环境科学与工程
+  - 生物医学工程
+  - 城乡规划学
+  - 风景园林学
+  - 软件工程
+  - 安全科学与工程
+  - 网络空间安全
+- name_cn: 医学
+  master_en: Master of Science
+  doctor_en: Doctor of Philosophy
+  disciplines:
+  - 基础医学
+  - 临床医学
+  - 药学
+- name_cn: 管理学
+  master_en: Master of Science
+  doctor_en: Doctor of Philosophy
+  disciplines:
+  - 管理科学与工程
+  - 工商管理
+  - 公共管理
+- name_cn: 艺术学
+  master_en: Master of Arts
+  doctor_en: Doctor of Philosophy
+  disciplines:
+  - 艺术学理论
+  - 美术学
+professional:
+- name_cn: 金融
+  master_en: Master of Finance
+  disciplines: []
+  has_field: false
+- name_cn: 应用统计
+  master_en: Master of Applied Statistics
+  disciplines: []
+  has_field: false
+- name_cn: 法律
+  master_en: Juris Master
+  disciplines: []
+  has_field: false
+- name_cn: 社会工作
+  master_en: Master of Social Work
+  disciplines: []
+  has_field: false
+- name_cn: 教育
+  doctor_en: Doctor of Education
+  disciplines: []
+  has_field: false
+- name_cn: 体育
+  master_en: Master of Science in Physical Education
+  disciplines: []
+  has_field: false
+- name_cn: 应用心理
+  master_en: Master of Applied Psychology
+  disciplines: []
+  has_field: false
+- name_cn: 新闻与传播
+  master_en: Master of Journalism and Communication
+  disciplines: []
+  has_field: false
+- name_cn: 建筑学
+  master_en: Master of Architecture
+  disciplines: []
+  has_field: false
+- name_cn: 城市规划
+  master_en: Master of Urban Planning
+  disciplines: []
+  has_field: false
+- name_cn: 电子信息
+  master_en: Master of Electronic and Information Engineering
+  doctor_en: Doctor of Electronic and Information Engineering
+  disciplines: []
+  has_field: true
+- name_cn: 机械
+  master_en: Master of Mechanical Engineering
+  doctor_en: Doctor of Mechanical Engineering
+  disciplines: []
+  has_field: true
+- name_cn: 材料与化工
+  master_en: Master of Materials and Chemical Engineering
+  doctor_en: Doctor of Materials and Chemical Engineering
+  disciplines: []
+  has_field: true
+- name_cn: 资源与环境
+  master_en: Master of Resources and Environmental Engineering
+  doctor_en: Doctor of Resources and Environmental Engineering
+  disciplines: []
+  has_field: true
+- name_cn: 能源动力
+  master_en: Master of Energy and Power Engineering
+  doctor_en: Doctor of Energy and Power Engineering
+  disciplines: []
+  has_field: true
+- name_cn: 土木水利
+  master_en: Master of Civil and Hydraulic Engineering
+  doctor_en: Doctor of Civil and Hydraulic Engineering
+  disciplines: []
+  has_field: true
+- name_cn: 生物与医药
+  master_en: Master of Biological and Pharmaceutical Engineering
+  doctor_en: Doctor of Biological and Pharmaceutical Engineering
+  disciplines: []
+  has_field: true
+- name_cn: 风景园林
+  master_en: Master of Landscape Architecture
+  disciplines: []
+  has_field: false
+- name_cn: 临床医学
+  master_en: Master of Medicine
+  doctor_en: Doctor of Medicine
+  disciplines: []
+  has_field: false
+- name_cn: 公共卫生
+  master_en: Master of Public Health
+  disciplines: []
+  has_field: false
+- name_cn: 工商管理
+  master_en: Master of Business Administration
+  disciplines: []
+  has_field: false
+- name_cn: 公共管理
+  master_en: Master of Public Administration
+  disciplines: []
+  has_field: false
+- name_cn: 会计
+  master_en: Master of Professional Accounting
+  disciplines: []
+  has_field: false
+- name_cn: 工程管理
+  master_en: Master of Engineering Management
+  disciplines: []
+  has_field: false
+- name_cn: 艺术
+  master_en: Master of Fine Arts
+  disciplines: []
+  has_field: false
+cross_disciplinary:
+- 集成电路科学与工程
+- 设计学
+discipline_awards:
+  心理学:
+  - 教育学
+  - 理学
+  科学技术史:
+  - 理学
+  - 工学
+  - 农学
+  - 医学
+  统计学:
+  - 理学
+  - 经济学
+  力学:
+  - 工学
+  - 理学
+  材料科学与工程:
+  - 工学
+  - 理学
+  电子科学与技术:
+  - 工学
+  - 理学
+  计算机科学与技术:
+  - 工学
+  - 理学
+  环境科学与工程:
+  - 工学
+  - 理学
+  - 农学
+  生物医学工程:
+  - 工学
+  - 理学
+  - 医学
+  安全科学与工程:
+  - 工学
+  - 管理学
+  基础医学:
+  - 医学
+  - 理学
+  药学:
+  - 医学
+  - 理学
+  管理科学与工程:
+  - 管理学
+  - 工学
+  集成电路科学与工程:
+  - 理学
+  - 工学
+  设计学:
+  - 工学
+  - 艺术学

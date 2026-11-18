@@ -1,0 +1,156 @@
+# 实现映射：语义规则键 <-> Word 样式（仅供模板生成使用）
+# 规则文件不包含本文件；普通用户无需阅读。
+#
+# name 保存实现查找用的内置原名，displayName 保存中文替换名（w:aliases），不写 styleId。Word 打开并保存后会按内部规则重排
+# 自定义样式的 styleId（footnote text 这类内置样式也一样），所以写死没有
+# 意义。代码、VBA 与测试一律按样式名查找样式。
+styleMap:
+  body: {name: "Normal"}
+  chapterTitle: {name: "Heading 1", displayName: "章标题（有编号）"}
+  chapterTitleUnnumbered: {name: "章标题（无编号）"}
+  chapterTitleNoOutline: {name: "章标题（无编号、不进目录）"}
+  sectionTitle1: {name: "Heading 2", displayName: "一级节标题"}
+  sectionTitle2: {name: "Heading 3", displayName: "二级节标题"}
+  sectionTitle3: {name: "Heading 4", displayName: "三级节标题"}
+  sectionTitleUnnumbered: {name: "章内无编号小节"}
+  committeeSectionTitle: {name: "名单页小节标题"}
+  appendixTitle: {name: "附录标题"}
+  appendixSectionTitle1: {name: "附录一级节标题"}
+  appendixSectionTitle2: {name: "附录二级节标题"}
+  appendixSectionTitle3: {name: "附录三级节标题"}
+  tocLevel1: {name: "toc 1", displayName: "目录一级条目"}
+  tocLevel2: {name: "toc 2", displayName: "目录二级条目"}
+  tocLevel3: {name: "toc 3", displayName: "目录三级条目"}
+  listOfFiguresEntry: {name: "toc 4", displayName: "清单条目"}
+  tableOfFigures: {name: "table of figures"}
+  symbolEntry: {name: "符号说明条目"}
+  caption: {name: "Caption"}
+  figureCaption: {name: "图注"}
+  subfigureCaption: {name: "子图注"}
+  appendixFigureCaption: {name: "附录图注"}
+  appendixTableCaption: {name: "附录表注"}
+  tableCaption: {name: "表注"}
+  figureTableNote: {name: "图表附注"}
+  tableText: {name: "表格文字"}
+  image: {name: "图片"}
+  threeLineTable: {name: "三线表"}
+  formula: {name: "公式"}
+  inlineFormula: {name: "行内公式"}
+  referenceEntry: {name: "参考文献条目"}
+  referenceEntryAuthorYear: {name: "参考文献条目（著者出版年）"}
+  citation: {name: "文献引用"}
+  subtleEmphasis: {name: "Subtle Emphasis"}
+  emphasis: {name: "Emphasis"}
+  strong: {name: "Strong", displayName: "明显强调"}
+  header: {name: "Header"}
+  footer: {name: "Footer"}
+  footnoteText: {name: "footnote text"}
+  footnoteReference: {name: "footnote reference"}
+  hyperlink: {name: "Hyperlink"}
+  coverTitleChinese: {name: "封面论文题目"}
+  coverDegreeInfo: {name: "封面学位类别"}
+  coverAuthorInfo: {name: "封面作者信息"}
+  coverSecurity: {name: "封面密级"}
+  coverDate: {name: "封面日期"}
+  coverTitleEnglish: {name: "英文封面题目"}
+  coverInfoEnglish: {name: "英文封面信息"}
+  coverSupervisorEnglish: {name: "英文封面导师信息"}
+  authorizationTitle: {name: "授权说明标题"}
+  inlineCode: {name: "行内代码"}
+  blockCode: {name: "行间代码"}
+  authorizationText: {name: "授权说明文字"}
+  listNumber1: {name: "List Number", displayName: "列表编号1"}
+  listNumber2: {name: "List Number 2", displayName: "列表编号2"}
+  listNumber3: {name: "List Number 3", displayName: "列表编号3"}
+  listBullet1: {name: "List Bullet", displayName: "列表项目符号1"}
+  listBullet2: {name: "List Bullet 2", displayName: "列表项目符号2"}
+  listBullet3: {name: "List Bullet 3", displayName: "列表项目符号3"}
+# 样式窗格按预估使用频率排序。优先级为 Word 界面中的首选数值。
+stylePresentation:
+  - {priority: 1, quickStyle: true, styles: [body]}
+  - {priority: 5, quickStyle: true, styles: [chapterTitle, sectionTitle1, sectionTitle2, sectionTitle3]}
+  - {priority: 10, quickStyle: true, styles: [figureCaption, tableCaption, image, tableText]}
+  - {priority: 15, quickStyle: true, styles: [formula, inlineFormula]}
+  - {priority: 20, quickStyle: true, styles: [referenceEntry, citation]}
+  - {priority: 25, quickStyle: true, styles: [listNumber1, listNumber2, listNumber3, listBullet1, listBullet2, listBullet3]}
+  - {priority: 30, quickStyle: true, styles: [footnoteText, emphasis, sectionTitleUnnumbered]}
+  - priority: 40
+    styles: [chapterTitleUnnumbered, figureTableNote, subfigureCaption, threeLineTable,
+             referenceEntryAuthorYear, footnoteReference, strong, subtleEmphasis, hyperlink]
+  - priority: 50
+    styles: [appendixTitle, appendixSectionTitle1, appendixSectionTitle2, appendixSectionTitle3,
+             appendixFigureCaption, appendixTableCaption]
+  - priority: 60
+    styles: [chapterTitleNoOutline, symbolEntry, inlineCode, blockCode, caption]
+  - {priority: 70, styles: [tocLevel1, tocLevel2, tocLevel3, listOfFiguresEntry, tableOfFigures, header, footer]}
+  - {priority: 80, styles: [authorizationTitle, authorizationText, committeeSectionTitle]}
+  - priority: 90
+    styles: [coverTitleChinese, coverDegreeInfo, coverAuthorInfo, coverSecurity, coverDate,
+             coverTitleEnglish, coverInfoEnglish, coverSupervisorEnglish]
+
+fallback:  # 默认父类（实现层 fallback）
+  chapterTitleUnnumbered: chapterTitle
+  chapterTitleNoOutline: chapterTitleUnnumbered
+  sectionTitle1: chapterTitle
+  sectionTitle2: sectionTitle1
+  sectionTitle3: sectionTitle2
+  sectionTitleUnnumbered: sectionTitle1
+  committeeSectionTitle: chapterTitleUnnumbered
+  appendixTitle: chapterTitle
+  appendixSectionTitle1: sectionTitle1
+  appendixSectionTitle2: sectionTitle2
+  appendixSectionTitle3: sectionTitle3
+  caption: body
+  figureCaption: caption
+  subfigureCaption: figureCaption
+  appendixFigureCaption: figureCaption
+  appendixTableCaption: tableCaption
+  tableCaption: caption
+  figureTableNote: body
+  image: body
+  tocLevel1: body
+  tocLevel2: tocLevel1
+  tocLevel3: tocLevel2
+  listOfFiguresEntry: tocLevel3
+  symbolEntry: body
+  referenceEntry: body
+  referenceEntryAuthorYear: referenceEntry
+  formula: body
+  header: body
+  footer: header
+  footnoteText: body
+  coverTitleChinese: body
+  coverDegreeInfo: body
+  coverAuthorInfo: body
+  coverSecurity: body
+  coverDate: body
+  coverTitleEnglish: coverTitleChinese
+  coverInfoEnglish: body
+  coverSupervisorEnglish: coverInfoEnglish
+  authorizationTitle: chapterTitleUnnumbered
+  authorizationText: body
+  inlineCode: body
+  blockCode: body
+  listNumber1: body
+  listNumber2: listNumber1
+  listNumber3: listNumber2
+  listBullet1: body
+  listBullet2: listBullet1
+  listBullet3: listBullet2
+numberingApply:  # 编号应用
+  chapterTitle: {list: outline, level: 1}
+  sectionTitle1: {list: outline, level: 2}
+  sectionTitle2: {list: outline, level: 3}
+  sectionTitle3: {list: outline, level: 4}
+  appendixTitle: {list: appendix, level: 1}
+  appendixSectionTitle1: {list: appendix, level: 2}
+  appendixSectionTitle2: {list: appendix, level: 3}
+  appendixSectionTitle3: {list: appendix, level: 4}
+  referenceEntry: {list: references, level: 1}
+  blockCode: {list: codeLines, level: 1}
+  listNumber1: {list: listNumber1, level: 1}
+  listNumber2: {list: listNumber2, level: 1}
+  listNumber3: {list: listNumber3, level: 1}
+  listBullet1: {list: listBullet1, level: 1}
+  listBullet2: {list: listBullet2, level: 1}
+  listBullet3: {list: listBullet3, level: 1}

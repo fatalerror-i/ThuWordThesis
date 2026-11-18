@@ -1,0 +1,55 @@
+Option Explicit
+
+Private Sub UserForm_Initialize()
+    Dim margin As Single
+    Dim buttonTop As Single
+
+    ApplyWordDialogStyle Me
+    margin = DIALOG_MARGIN
+    buttonTop = InsideHeight - margin - DIALOG_BUTTON_HEIGHT
+    lblSummary.Move margin, margin, InsideWidth - 2 * margin, 16
+    mpResults.Move margin, 33, InsideWidth - 2 * margin, buttonTop - 43
+    btnClose.Move InsideWidth - margin - DIALOG_BUTTON_WIDTH, buttonTop, _
+        DIALOG_BUTTON_WIDTH, DIALOG_BUTTON_HEIGHT
+End Sub
+
+Public Sub LoadReport(ByVal groups As Variant, ByVal issues As Long, ByVal notes As Long)
+    Dim i As Long
+    Dim firstResult As Long
+    Dim group As Variant
+    Dim page As MSForms.Page
+    Dim details As MSForms.TextBox
+
+    lblSummary.Caption = "发现 " & CStr(issues) & " 项问题，另有 " & CStr(notes) & " 项未引用提示。"
+    firstResult = -1
+    For i = LBound(groups) To UBound(groups)
+        group = groups(i)
+        If i < mpResults.Pages.Count Then
+            Set page = mpResults.Pages(i)
+        Else
+            Set page = mpResults.Pages.Add
+        End If
+        page.Caption = CStr(group(0)) & " (" & CStr(group(1)) & ")"
+        Set details = page.Controls.Add("Forms.TextBox.1", "txtDetails")
+        With details
+            .Move 8, 8, mpResults.Width - 22, mpResults.Height - 40
+            .Font.Name = lblSummary.Font.Name
+            .Font.Size = lblSummary.Font.Size
+            .BackColor = vbWindowBackground
+            .ForeColor = vbWindowText
+            .SpecialEffect = fmSpecialEffectFlat
+            .BorderStyle = fmBorderStyleNone
+            .MultiLine = True
+            .WordWrap = True
+            .ScrollBars = fmScrollBarsVertical
+            .Locked = True
+            .Text = CStr(group(2))
+        End With
+        If firstResult < 0 And CLng(group(1)) > 0 Then firstResult = i
+    Next i
+    If firstResult >= 0 Then mpResults.Value = firstResult
+End Sub
+
+Private Sub btnClose_Click()
+    Unload Me
+End Sub

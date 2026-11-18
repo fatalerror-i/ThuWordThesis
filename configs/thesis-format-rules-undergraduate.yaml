@@ -1,0 +1,1347 @@
+# =============================================================================
+# 清华大学综合论文训练论文（本科）格式规则
+# -----------------------------------------------------------------------------
+# 导航
+#   1 metadata            元信息
+#   2 conventions         命名/单位/枚举
+#   3 pageSetup           页面与分节
+#   4 styles              样式（4.1 基础 / 4.2 标题 / 4.3 目录 / 4.4 题注 /
+#                         4.5 公式 / 4.6 参考文献 / 4.7 页眉页脚 / 4.8 封面 / 4.9 其他 / 4.10 列表）
+#   5 numbering           编号
+#   6 captions            题注
+#   7 tables              表格
+#   8 footnotes           脚注
+#   9 headersAndFooters   页眉页脚与页码
+#  10 cover               封面
+#  11 documentParts       各部分
+#  12 appendix            纯注释附录（Word XML 对照）
+# -----------------------------------------------------------------------------
+# 约定
+#   - 键名 lowerCamelCase，完整英文单词；中文名称见注释。
+#   - 未写字段由实现层回退默认父类；本文件不表达继承。
+#   - 数值统一 {value, unit}；行距用 rule + amount。
+#   - 中文只出现在注释、numbering.text、captions.field、continuedTable.prefix。
+# =============================================================================
+
+metadata:
+  name: Tsinghua University Undergraduate Comprehensive Thesis Training Template  # 清华大学综合论文训练论文模板
+  basis: Undergraduate Comprehensive Thesis Training Writing Guide  # 综合论文训练写作规范
+  version: "2026.11-ug5"
+
+conventions:
+  units: [pt, cm, mm, character, line, multiple]  # 单位
+  alignment: [justified, left, center, right]  # 对齐（Word: w:jc）
+  lineSpacingRules: [single, oneAndHalf, double, multiple, minimum, fixed]
+# 行距规则对应：single/oneAndHalf/double/multiple → w:lineRule="auto"；
+# 其中 minimum 对应 "atLeast"，fixed 对应 "exact"。
+
+# =============================================================================
+# 3. pageSetup — 页面与分节
+# =============================================================================
+pageSetup:
+  paperSize:  # 纸张（w:pgSz）
+    width: {value: 21.0, unit: cm}
+    height: {value: 29.7, unit: cm}
+  documentGrid: none  # 全部节使用“无网格”（w:docGrid），不设行网格
+  defaultPageMargins:  # 默认页边距（w:pgMar）
+    top: {value: 3.0, unit: cm}
+    right: {value: 3.0, unit: cm}
+    bottom: {value: 3.0, unit: cm}
+    left: {value: 3.0, unit: cm}
+    header: {value: 2.2, unit: cm}
+    footer: {value: 1.5, unit: cm}
+    gutter: {value: 0, unit: cm}
+  hyphenation:  # 文档自动断字；全文默认开启，不按内容扫描
+    automatic: true
+    hyphenateCaps: false  # 全大写词不拆分
+    consecutiveLineLimit: 2  # 最多连续两行以断字连字符结尾
+  printing:  # 印刷方式（指南 2.2/2.4.1）
+    singleSidedSections: [chineseCover]  # 本科仅封面单面
+    doubleSidedFrom: frontMatter  # 从摘要起双面
+    headerSameOnOddEvenPages: true  # 页眉奇偶页相同（本科不显示页眉）
+  chapterSeparation: sectionBreakNextPage  # 章间用“分节符（下一页）”，不用分页符
+  sections:
+    chineseCover:  # 本科封面（上 3.8 / 下 3.2 / 左右 3.0 cm，装订线 0.2 cm 在左）
+      pageMargins:  # 页边距（w:pgMar）：规范 2.3.1
+        top: {value: 3.8, unit: cm}
+        right: {value: 3.0, unit: cm}
+        bottom: {value: 3.2, unit: cm}
+        left: {value: 3.0, unit: cm}
+        header: {value: 1.7, unit: cm}
+        footer: {value: 1.5, unit: cm}
+        gutter: {value: 0.2, unit: cm}
+      header: none  # 恢复空白“页眉”样式，无文字与下框线；密级在版心顶部独立行
+      footer: none  # 封面无页码
+    frontMatter:  # 摘要至符号和缩略语说明
+      pageNumbering: {format: upperRoman, start: 1}  # 罗马数字，起始 I（w:pgNumType）
+    body:  # 正文至末
+      pageNumbering: {format: decimal, start: 1}  # 阿拉伯数字，起始 1
+      startOnOddPage: false  # 是否强制另页右页（本模板：否）
+  documentDefaults:  # 文档默认格式（w:docDefaults；未单独设置格式的段落与文字都按此渲染）
+    characterFormat:  # 默认字符格式（w:rPrDefault/w:rPr）
+      fontFamily: {chinese: SimSun, western: Times New Roman}  # 中文宋体，西文 Times New Roman
+      fontSize: {value: 12, unit: pt}  # 小四
+    paragraphFormat:  # 默认段落格式（w:pPrDefault/w:pPr）
+      hyphenation: true  # 默认参与自动断字
+      wordWrap: false  # 普通文字不在任意字符处拆开西文单词
+      lineSpacing:  # 行距（w:spacing）
+        rule: minimum  # 最小值（w:lineRule=atLeast）
+        amount: {value: 20, unit: pt}
+      spaceBefore: {value: 0, unit: pt}  # 段前（w:before）
+      spaceAfter: {value: 0, unit: pt}  # 段后（w:after）
+
+# =============================================================================
+# 4. styles — 样式
+# =============================================================================
+# 样式索引（键 → 中文名）
+# 4.1 基础文本
+#   body                   正文
+# 4.2 标题
+#   chapterTitle           章标题（有编号）
+#   chapterTitleUnnumbered 章标题（无编号）
+#   chapterTitleNoOutline  章标题（无编号、不进目录）
+#   sectionTitle1          一级节标题
+#   sectionTitle2          二级节标题
+#   sectionTitle3          三级节标题
+#   sectionTitleUnnumbered 章内无编号小节（无编号、无大纲、居中）
+#   committeeSectionTitle  名单页小节标题
+#   appendixTitle          附录标题（有编号）
+#   appendixSectionTitle1  附录一级节标题
+#   appendixSectionTitle2  附录二级节标题
+#   appendixSectionTitle3  附录三级节标题
+# 4.3 目录与清单
+#   tocLevel1              TOC 1
+#   tocLevel2              TOC 2
+#   tocLevel3              TOC 3
+#   listOfFiguresEntry     图表清单条目（宋体小四、固定 20 磅、段前后 0 磅）
+#   tableOfFigures         图表目录条目（Word 内置“图表目录”样式）
+#   symbolEntry            符号说明条目
+# 4.4 题注与表格
+#   caption                题注基础
+#   figureCaption          图注
+#   subfigureCaption       子图注（基于图注）
+#   tableCaption           表注
+#   appendixFigureCaption  附录图注（不进插图清单）
+#   appendixTableCaption   附录表注（不进附表清单）
+#   figureTableNote        图表附注（图/表下方附注；单倍行距）
+#   tableText              表格文字（单元格内文字，段前段后 3pt）
+#   image                  图片段落
+#   threeLineTable         三线表（Word 表格样式）
+# 4.5 公式
+#   formula                公式
+#   inlineFormula          行内公式（字符样式）
+# 4.6 参考文献
+#   referenceEntry         参考文献条目（顺序编码制）
+#   referenceEntryAuthorYear 参考文献条目（著者出版年制）
+#   citation               文献引用编号（字符样式）
+# 4.7 强调字符样式
+#   subtleEmphasis         不明显强调（黑体+Arial，不加粗）
+#   emphasis               强调（宋体+TNR，加粗）
+#   strong                 明显强调（黑体+Arial，加粗）
+# 4.7 页眉页脚与脚注
+#   header                 页眉
+#   footer                 页脚
+#   footnoteText           脚注文本
+#   footnoteReference      脚注引用编号（字符样式）
+#   hyperlink              超链接（字符样式）
+# 4.8 封面
+#   coverTitleChinese      中文封面论文题目
+#   coverDegreeInfo        中文封面学位信息
+#   coverAuthorInfo        中文封面作者导师信息
+#   coverSecurity          中文封面密级
+#   coverDate              中文封面成文日期
+#   coverTitleEnglish      英文封面论文题目
+#   coverInfoEnglish       英文封面其他信息
+#   coverSupervisorEnglish 英文封面导师信息
+# 4.9 其他
+#   authorizationTitle     授权说明标题
+#   authorizationText      授权说明文字
+# 4.10 内置列表样式
+#   listNumber1            列表编号 1
+#   listNumber2            列表编号 2
+#   listNumber3            列表编号 3
+#   listBullet1            列表项目符号 1
+#   listBullet2            列表项目符号 2
+#   listBullet3            列表项目符号 3
+# 4.11 代码样式
+#   inlineCode             行内代码（字符样式）
+#   blockCode              行间代码
+styles:
+
+# -----------------------------------------------------------------------------
+# 4.1 基础文本
+# 依据：2.3.9.3
+# 包含：body
+# -----------------------------------------------------------------------------
+
+  # 正文（Word 样式：正文 / Normal）
+  # 指南：2.3.9.3｜用途：正文段落、摘要正文
+  body:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimSun  # 中文字体（w:eastAsia）：宋体
+        western: Times New Roman  # 西文字体（w:ascii）：Times New Roman
+      fontSize: {value: 12, unit: pt}  # 字号（w:sz）：小四
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: justified  # 对齐（w:jc）：两端对齐
+      lineSpacing:  # 行距（w:spacing）
+        rule: minimum  # 最小值（w:lineRule=atLeast）；行内有大字号或图片时自动撑开，不裁切
+        amount: {value: 20, unit: pt}
+      spaceBefore: {value: 0, unit: pt}  # 段前（w:before）
+      spaceAfter: {value: 0, unit: pt}  # 段后（w:after）
+      firstLineIndent: {value: 2, unit: character}  # 首行缩进（w:firstLineChars）
+
+# -----------------------------------------------------------------------------
+# 4.2 标题
+# 包含：chapterTitle、chapterTitleUnnumbered、chapterTitleNoOutline、
+#       sectionTitle1、sectionTitle2、sectionTitle3、committeeSectionTitle、
+#       appendixTitle、appendixSectionTitle1
+# -----------------------------------------------------------------------------
+
+  # 章标题（有编号）（Word 样式：标题 1）
+  # 指南：2.3.9.2｜用途：正文各章
+  # 备注：段前后按官方 24/18
+  # 显示名：章标题（有编号）（内置样式替换名）
+  chapterTitle:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimHei  # 中文字体（w:eastAsia）：黑体
+        western: Arial  # 西文字体（w:ascii）：Arial
+      fontSize: {value: 16, unit: pt}  # 字号（w:sz）：三号
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: center  # 对齐（w:jc）：居中
+      lineSpacing:  # 行距（w:spacing）
+        rule: single  # 单倍（w:lineRule）
+      spaceBefore: {value: 24, unit: pt}  # 段前（w:before）
+      spaceAfter: {value: 18, unit: pt}  # 段后（w:after）
+      outlineLevel: 1  # 大纲级别：1 级（w:outlineLvl=0）
+      pageBreakBefore: false  # 不使用段前分页；章间由“分节符（下一页）”控制
+      keepLinesTogether: true  # 段中不分页
+      numbering: {list: outline, level: 1}  # 编号
+
+  # 章标题（无编号）（Word 样式：章标题）
+  # 指南：2.3.9.2｜用途：摘要、目录、参考文献、致谢、声明、简历、评语、决议书
+  # 备注：无编号；视觉同章标题
+  chapterTitleUnnumbered:
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      numbering: none  # 无编号
+      pageBreakBefore: false  # 不使用段前分页；前置部分也用“分节符（下一页）”起页
+
+  # 章标题（无编号、不进目录）（Word 样式：章标题无大纲级别）
+  # 指南：2.3.3/2.3.4｜用途：名单、授权说明
+  # 备注：自定：不进目录
+  chapterTitleNoOutline:
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      outlineLevel: bodyText  # 大纲级别：正文文本
+      numbering: none  # 无编号
+      pageBreakBefore: false  # 不使用段前分页；名单页、授权说明用“分节符（下一页）”起页
+
+  # 一级节标题（Word 样式：标题 2）
+  # 指南：2.3.9.2｜用途：X.Y 节
+  # 显示名：一级节标题（内置样式替换名）
+  sectionTitle1:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontSize: {value: 14, unit: pt}  # 字号（w:sz）：四号
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: left  # 对齐（w:jc）：左对齐
+      lineSpacing:  # 行距（w:spacing）
+        rule: fixed  # 固定值（w:lineRule）
+        amount: {value: 20, unit: pt}
+      spaceBefore: {value: 24, unit: pt}  # 段前（w:before）：一级节标题 24 磅
+      spaceAfter: {value: 6, unit: pt}  # 段后（w:after）
+      outlineLevel: 2  # 大纲级别：2 级（w:outlineLvl=1）
+      numbering: {list: outline, level: 2}  # 编号
+
+  # 二级节标题（Word 样式：标题 3）
+  # 指南：2.3.9.2｜用途：X.Y.Z 节
+  # 显示名：二级节标题（内置样式替换名）
+  sectionTitle2:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontSize: {value: 13, unit: pt}  # 字号（w:sz）：13pt
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      spaceBefore: {value: 12, unit: pt}  # 段前（w:before）
+      spaceAfter: {value: 6, unit: pt}  # 段后（w:after）：二级节标题 6 磅
+      outlineLevel: 3  # 大纲级别：3 级（w:outlineLvl=2）
+      numbering: {list: outline, level: 3}  # 编号
+
+  # 三级节标题（Word 样式：标题 4）
+  # 指南：2.3.9.2｜用途：X.Y.Z.W 节；官方不建议使用
+  # 显示名：三级节标题（内置样式替换名）
+  sectionTitle3:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontSize: {value: 12, unit: pt}  # 字号（w:sz）：小四
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      spaceBefore: {value: 12, unit: pt}  # 段前（w:before）：三级节标题 12 磅
+      spaceAfter: {value: 6, unit: pt}  # 段后（w:after）：三级节标题 6 磅
+      outlineLevel: 4  # 大纲级别：4 级（w:outlineLvl=3）
+      numbering: {list: outline, level: 4}  # 编号
+
+  # 章内无编号小节（Word 样式：章内无编号小节）
+  # 指南：2.3.9.2｜用途：个人简历小标题、附录内参考文献小节
+  # 备注：无编号、无大纲级别、居中；视觉同二级节标题
+  sectionTitleUnnumbered:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimHei  # 中文字体（w:eastAsia）：黑体
+        western: Arial  # 西文字体（w:ascii）：Arial
+      fontSize: {value: 14, unit: pt}  # 字号（w:sz）：四号
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: center  # 对齐（w:jc）：居中
+      lineSpacing:  # 行距（w:spacing）
+        rule: fixed  # 固定值（w:lineRule）
+        amount: {value: 20, unit: pt}
+      spaceBefore: {value: 24, unit: pt}  # 段前（w:before）
+      spaceAfter: {value: 6, unit: pt}  # 段后（w:after）
+      outlineLevel: bodyText  # 大纲级别：正文文本（不进目录）
+      numbering: none  # 无编号
+      keepWithNext: true  # 与下文同页
+
+  # 名单页小节标题（Word 样式：章标题副标题）
+  # 指南：2.3.3｜用途：指导小组名单、公开评阅人名单、答辩委员会名单
+  # 备注：四号黑体居中；固定 20 磅；段前 24、段后 6
+  committeeSectionTitle:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimHei  # 中文字体（w:eastAsia）：黑体
+        western: Arial  # 西文字体（w:ascii）：Arial
+      fontSize: {value: 14, unit: pt}  # 字号（w:sz）：四号
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: center  # 对齐（w:jc）：居中
+      lineSpacing:  # 行距（w:spacing）
+        rule: fixed  # 固定值（w:lineRule）
+        amount: {value: 20, unit: pt}
+      spaceBefore: {value: 24, unit: pt}  # 段前（w:before）
+      spaceAfter: {value: 6, unit: pt}  # 段后（w:after）
+
+  # 附录标题（有编号）（Word 样式：附录标题 1）
+  # 指南：2.3.11｜用途：附录 A/B/C
+  # 备注：格式同章标题；编号为“附录A”
+  appendixTitle:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimHei  # 中文字体（w:eastAsia）：黑体
+        western: Arial  # 西文字体（w:ascii）
+      fontSize: {value: 16, unit: pt}  # 字号（w:sz）：三号
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      numbering: {list: appendix, level: 1}  # 编号
+      pageBreakBefore: false  # 不使用段前分页；附录用“分节符（下一页）”起页
+
+  # 附录一级节标题（Word 样式：附录标题 2）
+  # 指南：2.3.11｜用途：A.1 节
+  # 备注：不进入目录（大纲级别=正文文本）
+  appendixSectionTitle1:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimHei  # 中文字体（w:eastAsia）：黑体
+        western: Arial  # 西文字体（w:ascii）
+      fontSize: {value: 14, unit: pt}  # 字号（w:sz）：四号
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      outlineLevel: bodyText  # 大纲级别：正文文本
+      numbering: {list: appendix, level: 2}  # 编号
+
+  # 附录二级节标题（Word 样式：附录标题 3）
+  # 指南：2.3.11｜用途：A.1.1 节
+  # 备注：格式同二级节标题；编号为 A.1.1
+  appendixSectionTitle2:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimHei  # 中文字体（w:eastAsia）：黑体
+        western: Arial  # 西文字体（w:ascii）
+      fontSize: {value: 13, unit: pt}  # 字号（w:sz）：13 磅（同二级节标题）
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      outlineLevel: bodyText  # 大纲级别：正文文本
+      numbering: {list: appendix, level: 3}  # 编号
+
+  # 附录三级节标题（Word 样式：附录标题 4）
+  # 指南：2.3.11｜用途：A.1.1.1 节
+  # 备注：格式同三级节标题；编号为 A.1.1.1
+  appendixSectionTitle3:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimHei  # 中文字体（w:eastAsia）：黑体
+        western: Arial  # 西文字体（w:ascii）
+      fontSize: {value: 12, unit: pt}  # 字号（w:sz）：小四（同三级节标题）
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      outlineLevel: bodyText  # 大纲级别：正文文本
+      numbering: {list: appendix, level: 4}  # 编号
+
+  
+
+# -----------------------------------------------------------------------------
+# 4.3 目录与清单
+# 包含：TOC 1–4、symbolEntry；TOC 1–3 为目录；TOC 4 为清单条目规则（备用）
+# -----------------------------------------------------------------------------
+
+  # TOC 1（Word 样式：toc 1）
+  # 指南：2.3.6｜用途：目录章标题行
+  # 备注：段前按官方 0（模板原为 6）
+  # 显示名：目录一级条目（内置样式替换名）
+  tocLevel1:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimHei  # 中文字体（w:eastAsia）：黑体
+        western: Arial  # 西文字体（w:ascii）：Arial
+      fontSize: {value: 12, unit: pt}  # 字号（w:sz）：小四
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: left  # 对齐（w:jc）：左对齐
+      lineSpacing:  # 行距（w:spacing）
+        rule: fixed  # 固定值
+        amount: {value: 20, unit: pt}
+      spaceBefore: {value: 0, unit: pt}  # 段前（w:before）
+      spaceAfter: {value: 0, unit: pt}  # 段后（w:after）
+      tabs:  # 制表位
+        - position: {value: 15, unit: cm}
+          alignment: right
+          leader: dots
+
+  # TOC 2（Word 样式：toc 2）
+  # 指南：2.3.6｜用途：目录一级节标题行
+  # 显示名：目录二级条目（内置样式替换名）
+  tocLevel2:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimSun  # 中文字体（w:eastAsia）：宋体
+        western: Times New Roman  # 西文字体（w:ascii）：Times New Roman
+      fontSize: {value: 12, unit: pt}  # 字号（w:sz）：小四
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      lineSpacing:  # 行距（w:spacing）
+        rule: fixed  # 固定值
+        amount: {value: 20, unit: pt}
+      spaceBefore: {value: 0, unit: pt}  # 段前（w:before）
+      spaceAfter: {value: 0, unit: pt}  # 段后（w:after）
+      leftIndent: {value: 1, unit: character}  # 左缩进（w:leftChars）
+
+  # TOC 3（Word 样式：toc 3）
+  # 指南：2.3.6｜用途：目录二级节标题行
+  # 显示名：目录三级条目（内置样式替换名）
+  tocLevel3:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimSun  # 中文字体（w:eastAsia）：宋体
+        western: Times New Roman  # 西文字体（w:ascii）：Times New Roman
+      fontSize: {value: 12, unit: pt}  # 字号（w:sz）：小四
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      lineSpacing:  # 行距（w:spacing）
+        rule: fixed  # 固定值
+        amount: {value: 20, unit: pt}
+      spaceBefore: {value: 0, unit: pt}  # 段前（w:before）
+      spaceAfter: {value: 0, unit: pt}  # 段后（w:after）
+      leftIndent: {value: 2, unit: character}  # 左缩进（w:leftChars）
+
+  # 图表清单条目（Word 样式：toc 4；\c 生成的内置"图表目录"样式同样按此归一）
+  # 指南：2.3.7｜宋体小四、固定 20 磅、段前段后 0 磅；插图/附表清单内容部分
+  # 备注：\c 域用内置样式，postprocess_docx.py 按本条覆盖其段后 10 磅与 1.15 倍行距
+  # 显示名：清单条目（内置样式替换名）
+  listOfFiguresEntry:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimSun  # 中文字体（w:eastAsia）：宋体
+        western: Times New Roman  # 西文字体（w:ascii）：Times New Roman
+      fontSize: {value: 12, unit: pt}  # 字号（w:sz）：小四
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      lineSpacing:  # 行距（w:spacing）
+        rule: fixed  # 固定值
+        amount: {value: 20, unit: pt}
+      spaceBefore: {value: 0, unit: pt}  # 段前（w:before）
+      spaceAfter: {value: 0, unit: pt}  # 段后（w:after）
+      tabs:  # 制表位：页码右对齐至版心右缘，与目录一致
+        - position: {value: 15, unit: cm}
+          alignment: right
+          leader: dots
+
+  # 图表目录条目（Word 样式：table of figures）
+  # 指南：2.3.7｜用途：插图清单、附表清单的条目（\c "图"、\c "表" 域生成）
+  # 备注：\h 域条目带超链接；条目名为“图表目录”是 Word 内置名，勿改
+  tableOfFigures:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimSun  # 中文字体（w:eastAsia）：宋体
+        western: Times New Roman  # 西文字体（w:ascii）：Times New Roman
+      fontSize: {value: 12, unit: pt}  # 字号（w:sz）：小四
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: left  # 对齐（w:jc）：左对齐（页码另用右制表位）
+      lineSpacing:  # 行距（w:spacing）
+        rule: fixed  # 固定值
+        amount: {value: 20, unit: pt}
+      spaceBefore: {value: 0, unit: pt}  # 段前（w:before）
+      spaceAfter: {value: 0, unit: pt}  # 段后（w:after）
+      leftIndent: {value: 0, unit: character}  # 左缩进 0（内置样式自带 2 字符，须清掉）
+      tabs:  # 制表位：页码右对齐至版心右缘，与目录一致
+        - position: {value: 15, unit: cm}
+          alignment: right
+          leader: dots
+
+  # 符号说明条目
+  # Word 样式：符号说明条目｜指南：2.3.8｜用途：符号和缩略语说明
+  # 布局：符号在版心左缘 0 厘米处，说明从 12 字符（小四 12 pt = 5.08 cm）处左对齐。
+  # 续行悬挂 12 字符；用绝对厘米值，字符与厘米同写时 Word 会把缩进叠加放大。
+  symbolEntry:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimSun  # 中文字体（w:eastAsia）：宋体
+        western: Times New Roman  # 西文字体（w:ascii）
+      fontSize: {value: 12, unit: pt}  # 字号（w:sz）：小四
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      lineSpacing:  # 行距（w:spacing）
+        rule: fixed  # 固定值（w:lineRule）
+        amount: {value: 20, unit: pt}
+      spaceBefore: {value: 0, unit: pt}  # 段前（w:before）：0
+      spaceAfter: {value: 0, unit: pt}  # 段后（w:after）：0
+      hangingIndent: {value: 5.08, unit: cm}  # 悬挂缩进（w:hanging）
+      leftIndent: {value: 5.08, unit: cm}  # 左缩进（w:left）
+      tabs:  # 制表位：与说明列对齐（12 字符 = 144 pt）
+        - position: {value: 5.08, unit: cm}
+          alignment: left
+
+# -----------------------------------------------------------------------------
+# 4.4 题注与表格
+# 包含：caption、figureCaption、subfigureCaption、tableCaption、figureTableNote、image
+# -----------------------------------------------------------------------------
+
+  # 题注基础（Word 样式：caption）
+  # 指南：2.3.19｜用途：图注/表注公共格式
+  caption:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontSize: {value: 11, unit: pt}  # 字号（w:sz）：11pt
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: center  # 对齐（w:jc）：居中
+      lineSpacing:  # 行距（w:spacing）
+        rule: single  # 单倍（w:lineRule）
+      spaceBefore: {value: 6, unit: pt}  # 段前（w:before）
+      spaceAfter: {value: 6, unit: pt}  # 段后（w:after）
+      keepLinesTogether: true  # 段中不分页
+
+  # 图注（Word 样式：图注）
+  # 指南：2.3.19｜用途：图注（图下方）
+  figureCaption:
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      spaceAfter: {value: 12, unit: pt}  # 段后（w:after）
+
+  # 子图注（Word 样式：子图注）
+  # 指南：2.3.19｜用途：子图下方“(a)　题名”题注
+  # 备注：格式继承“图注”；用 SEQ 子图，\c "图" 清单不收子图题注
+  subfigureCaption:
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      spaceAfter: {value: 12, unit: pt}  # 段后（w:after）
+
+  # 表注（Word 样式：表注）
+  # 指南：2.3.19｜用途：表注（表上方，与图注同级）
+  tableCaption:
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      spaceBefore: {value: 12, unit: pt}  # 段前（w:before）
+
+  # 附录图注（Word 样式：附录图注）
+  # 指南：2.3.11/2.3.19｜用途：附录中的图注
+  # 备注：继承“图注”；用 SEQ 附录图，\c "图" 清单不收附录题注
+  appendixFigureCaption:
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      spaceAfter: {value: 12, unit: pt}  # 段后（w:after）
+
+  # 附录表注（Word 样式：附录表注）
+  # 指南：2.3.11/2.3.19｜用途：附录中的表注
+  # 备注：继承“表注”；用 SEQ 附录表，\c "表" 清单不收附录题注
+  appendixTableCaption:
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      spaceBefore: {value: 12, unit: pt}  # 段前（w:before）
+
+  # 图表附注（Word 样式：图表附注）
+  # 指南：2.3.19｜用途：图下方、表下方的资料来源与附注（图附注与表附注同一套格式）
+  # 备注：五号宋体/TNR；单倍行距；段前 6 磅、段后 12 磅
+  figureTableNote:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimSun  # 中文字体（w:eastAsia）：宋体
+        western: Times New Roman  # 西文字体（w:ascii）
+      fontSize: {value: 10.5, unit: pt}  # 字号（w:sz）：五号
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: justified  # 对齐（w:jc）：两端对齐
+      lineSpacing:  # 行距（w:spacing）
+        rule: single  # 单倍行距
+      spaceBefore: {value: 6, unit: pt}  # 段前（w:before）
+      spaceAfter: {value: 12, unit: pt}  # 段后（w:after）
+
+  # 表格文字（Word 样式：表格文字）
+  # 指南：2.3.19｜用途：表格单元格内文字
+  # 备注：宋体 + Times New Roman；五号；居中；段前段后各 3 磅；无首行缩进
+  tableText:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimSun  # 中文字体（w:eastAsia）：宋体
+        western: Times New Roman  # 西文字体（w:ascii）
+      fontSize: {value: 11, unit: pt}  # 字号（w:sz）：五号
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: center  # 对齐（w:jc）：居中
+      lineSpacing:  # 行距（w:spacing）
+        rule: single  # 单倍行距
+      spaceBefore: {value: 3, unit: pt}  # 段前（w:before）：3 磅
+      spaceAfter: {value: 3, unit: pt}  # 段后（w:after）：3 磅
+      firstLineIndent: {value: 0, unit: character}  # 首行缩进：无
+      autoSpaceDE: false  # 不自动调整西文与中文间距
+      autoSpaceDN: false  # 不自动调整数字与中文间距
+
+  # 图片段落（Word 样式：图片）
+  # 指南：2.3.19｜用途：图片所在段落
+  # 备注：自定：段前 12pt、与下段同页
+  image:
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: center  # 对齐（w:jc）：居中
+      lineSpacing:  # 行距（w:spacing）
+        rule: single  # 单倍（w:lineRule）
+      spaceBefore: {value: 12, unit: pt}  # 段前（w:before）
+      keepWithNext: true  # 与下段同页
+      widowControl: true  # 孤行控制
+
+  # 三线表（Word 样式：三线表）（表格样式）
+  # 指南：2.3.19｜用途：正文与附录的所有插表
+  # 备注：上下框线 1.5 磅、首行下框线 1 磅，其余框线全无；表头跨页重复
+  threeLineTable:
+    styleType: table  # 表格样式（Word: w:type="table"）
+    tableFormat:  # 表格格式（Word: w:tblPr）
+      tableBorders:  # 框线（w:tblBorders）
+        top: {style: single, width: {value: 1.5, unit: pt}}
+        bottom: {style: single, width: {value: 1.5, unit: pt}}
+        left: {style: none}
+        right: {style: none}
+        insideHorizontal: {style: none}
+        insideVertical: {style: none}
+      firstRowBorders:  # 首行条件边框（w:tblStylePr type=firstRow）
+        bottom: {style: single, width: {value: 1, unit: pt}}
+      alignment: center  # 表格居中
+      cellMargins:  # 单元格内边距（w:tblCellMar）
+        top: {value: 0, unit: pt}
+        left: {value: 0, unit: pt}
+        bottom: {value: 0, unit: pt}
+        right: {value: 0, unit: pt}
+
+# -----------------------------------------------------------------------------
+# 4.5 公式
+# 包含：formula
+# -----------------------------------------------------------------------------
+
+  # 公式（Word 样式：公式）
+  # 指南：2.3.19｜用途：行间公式
+  # 备注：默认 XITS Math；行距最小值 20 pt（与正文行高一致）
+  formula:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        western: XITS Math  # 西文字体（w:ascii）：XITS Math
+      fontSize: {value: 12, unit: pt}  # 字号（w:sz）：小四
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      wordWrap: false  # 不允许西文在单词中间换行
+      hyphenation: false  # 本样式不参与自动断字
+      alignment: center  # 对齐（w:jc）：居中
+      lineSpacing:  # 行距（w:spacing）
+        rule: minimum  # 最小值（w:lineRule）
+        amount: {value: 20, unit: pt}
+      spaceBefore: {value: 6, unit: pt}  # 段前（w:before）
+      spaceAfter: {value: 6, unit: pt}  # 段后（w:after）
+
+  # 行内公式（字符样式）（Word 样式：行内公式）
+  # 指南：2.3.19｜用途：正文中的行内公式
+  # 备注：只设字符格式，不改段落；与行间公式同用 XITS Math 12 pt
+  inlineFormula:
+    styleType: character  # 样式类型：character=字符样式
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        western: XITS Math  # 西文字体（w:ascii）：XITS Math
+      fontSize: {value: 12, unit: pt}  # 字号（w:sz）：小四
+
+# -----------------------------------------------------------------------------
+# 4.6 参考文献
+# 包含：referenceEntry（顺序编码制）
+# -----------------------------------------------------------------------------
+
+  # 参考文献条目（顺序编码制）（Word 样式：参考文献-顺序编码制）
+  # 指南：2.3.10｜用途：参考文献表
+  referenceEntry:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontSize: {value: 10.5, unit: pt}  # 字号（w:sz）：五号
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      hyphenation: false  # 本样式不参与自动断字
+      wordWrap: false  # 不允许西文在单词中间换行，URL保持原文
+      lineSpacing:  # 行距（w:spacing）
+        rule: fixed  # 固定值（w:lineRule）
+        amount: {value: 16, unit: pt}
+      spaceBefore: {value: 3, unit: pt}  # 段前（w:before）
+      spaceAfter: {value: 0, unit: pt}  # 段后（w:after）
+      hangingIndent: {value: 1, unit: cm}  # 悬挂缩进 1 厘米（指南 2.3.10 允许「2 汉字符或 1 厘米」，取 1 厘米）
+      numbering: {list: references, level: 1}  # 编号
+
+  # 参考文献条目（著者出版年制）（Word 样式：参考文献-著者出版年制）
+  # 指南：2.3.10｜用途：著者-出版年制参考文献表
+  # 备注：与顺序编码制相同的字号、行距与悬挂缩进；不使用编号
+  referenceEntryAuthorYear:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontSize: {value: 10.5, unit: pt}  # 字号（w:sz）：五号
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      hyphenation: false  # 本样式不参与自动断字
+      wordWrap: false  # 不允许西文在单词中间换行，URL保持原文
+      lineSpacing:  # 行距（w:spacing）
+        rule: fixed  # 固定值（w:lineRule）
+        amount: {value: 16, unit: pt}
+      spaceBefore: {value: 3, unit: pt}  # 段前（w:before）
+      spaceAfter: {value: 0, unit: pt}  # 段后（w:after）
+      hangingIndent: {value: 1, unit: cm}  # 悬挂缩进 1 厘米（与顺序编码制一致）
+
+  # 文献引用编号（字符样式）（Word 样式：文献引用）
+  # 指南：2.3.10｜用途：正文引用参考文献序号，上标
+  citation:
+    styleType: character  # 样式类型：character=字符样式
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        western: Times New Roman  # 西文字体（w:ascii）
+        chinese: SimSun  # 中文字体（w:eastAsia）
+      superscript: true  # 上标（w:vertAlign）
+
+  # 不明显强调（字符样式）（Word 样式：不明显强调）
+  # 指南：2.3.9｜用途：需要弱化的文字
+  # 备注：黑体+Arial；不加粗；黑色
+  subtleEmphasis:
+    styleType: character  # 样式类型：character=字符样式
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimHei  # 中文字体（w:eastAsia）：黑体
+        western: Arial  # 西文字体（w:ascii）：Arial
+      bold: false  # 不加粗
+      italic: false  # 不使用斜体
+      color: "000000"  # 字色：黑色
+
+  # 强调（字符样式）（Word 样式：强调）
+  # 指南：2.3.9｜用途：需要强调的正文文字
+  # 备注：宋体+TNR；加粗；黑色
+  emphasis:
+    styleType: character  # 样式类型：character=字符样式
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimSun  # 中文字体（w:eastAsia）：宋体
+        western: Times New Roman  # 西文字体（w:ascii）
+      bold: true  # 加粗
+      italic: false  # 不使用斜体
+      color: "000000"  # 字色：黑色
+
+  # 明显强调（字符样式）（Word 样式：明显强调）
+  # 指南：2.3.9｜用途：需要明显强调的标签文字
+  # 备注：黑体+Arial；加粗
+  # 显示名：明显强调（内置样式替换名）
+  strong:
+    styleType: character  # 样式类型：character=字符样式
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimHei  # 中文字体（w:eastAsia）：黑体
+        western: Arial  # 西文字体（w:ascii）：Arial
+      bold: true  # 加粗
+      italic: false  # 不使用斜体
+      color: "000000"  # 字色：黑色
+
+  
+
+# -----------------------------------------------------------------------------
+# 4.7 页眉页脚与脚注
+# 包含：header、footer、footnoteText、footnoteReference
+# -----------------------------------------------------------------------------
+
+  # 页眉（Word 样式：header）
+  # 指南：2.4.2｜用途：各页篇眉
+  # 备注：本科版页眉为“无”，不带下边框；研究生版才有下边框（0.75pt，为自定）。
+  header:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimSun  # 中文字体（w:eastAsia）：宋体
+        western: Times New Roman  # 西文字体（w:ascii）：Times New Roman
+      fontSize: {value: 10.5, unit: pt}  # 字号（w:sz）：五号
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: center  # 对齐（w:jc）：居中
+      lineSpacing:  # 行距（w:spacing）
+        rule: single  # 单倍（w:lineRule）
+      tabs: []  # 制表位：不设（与页脚一致，段内不加任何制表位）
+
+  # 页脚（Word 样式：footer）
+  # 指南：2.4.2｜用途：页码
+  # 备注：页码居中；不设边框与制表位
+  footer:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimSun  # 中文字体（w:eastAsia）：宋体
+        western: Times New Roman  # 西文字体（w:ascii）：Times New Roman
+      fontSize: {value: 10.5, unit: pt}  # 字号（w:sz）：五号
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: center  # 对齐（w:jc）：居中
+      tabs: []  # 制表位：不设（页码居中即可）
+
+  # 脚注文本（Word 样式：footnote text）
+  # 指南：2.3.9.4｜用途：页下脚注
+  footnoteText:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontSize: {value: 9, unit: pt}  # 字号（w:sz）：小五
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      lineSpacing:  # 行距（w:spacing）
+        rule: single  # 单倍（w:lineRule）
+      spaceBefore: {value: 0, unit: pt}  # 段前 0 磅
+      spaceAfter: {value: 0, unit: pt}  # 段后 0 磅
+      hangingIndent: {value: 1.5, unit: character}  # 悬挂缩进（w:hangingChars）
+      leftIndent: {value: 0, unit: character}  # 左缩进 0 字符（首行顶格）
+      keepLinesTogether: true  # 段中不分页
+
+  # 脚注引用（Word 样式：footnote reference）（字符样式）
+  # 指南：2.3.9.4｜用途：正文中指向页下脚注的编号
+  # 备注：样式本身只管字形；上标由 footnotes.referenceMarker 直接格式加在编号 run 上
+  footnoteReference:
+    styleType: character  # 字符样式
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimSun  # 中文字体（w:eastAsia）：宋体
+        western: Times New Roman  # 西文字体（w:ascii）：Times New Roman
+      bold: false  # 不加粗
+      italic: false  # 不倾斜
+      color: "000000"  # 字色：黑色
+
+  # 超链接（Word 样式：Hyperlink）（字符样式）
+  # 指南：2.3.6｜用途：目录、清单等域生成的内部跳转链接
+  # 备注：沿用默认文字样式，不加下划线，点击前后都是黑色
+  hyperlink:
+    styleType: character  # 字符样式
+    characterFormat:  # 字符格式（Word: w:rPr）
+      bold: false  # 不加粗
+      italic: false  # 不倾斜
+      underline: none  # 下划线（w:u）：无
+      color: "000000"  # 字色：黑色（不带主题色，点击后不会变紫）
+
+# -----------------------------------------------------------------------------
+# 4.8 封面
+# 包含：coverTitleChinese、coverDegreeInfo、coverAuthorInfo、coverDate、
+#       coverTitleEnglish、coverInfoEnglish、coverSupervisorEnglish
+# -----------------------------------------------------------------------------
+
+  # 中文封面论文题目（Word 样式：Title）
+  # 指南：2.3.1｜用途：中文封面题目
+  # 备注：官方 1.25 倍行距
+  coverTitleChinese:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimHei  # 中文字体（w:eastAsia）：黑体
+        western: Arial  # 西文字体（w:ascii）：Arial
+      fontSize: {value: 26, unit: pt}  # 字号（w:sz）：一号
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: center  # 对齐（w:jc）：居中
+      lineSpacing:  # 行距（w:spacing）
+        rule: multiple  # 多倍（w:lineRule）
+        amount: {value: 1.25, unit: multiple}
+
+  # 中文封面学位信息（Word 样式：Subtitle）
+  # 指南：2.3.1｜用途：申请学位的学科门类/专业学位类别
+  # 备注：自定：模板西文也用宋体
+  coverDegreeInfo:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimSun  # 中文字体（w:eastAsia）：宋体
+        western: SimSun  # 西文字体（w:ascii）：宋体
+      fontSize: {value: 16, unit: pt}  # 字号（w:sz）：三号
+      characterSpacing: {value: 0.5, unit: pt}  # 字间距（w:spacing）
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: center  # 对齐（w:jc）：居中
+      lineSpacing:  # 行距（w:spacing）
+        rule: fixed  # 固定值（w:lineRule）
+        amount: {value: 22, unit: pt}
+      spaceBefore: {value: 16, unit: pt}  # 段前（w:before）
+      spaceAfter: {value: 16, unit: pt}  # 段后（w:after）
+
+  # 中文封面作者导师信息（Word 样式：中文封面-作者导师信息）
+  # 指南：2.3.1｜用途：培养单位、学科、作者、导师
+  coverAuthorInfo:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: FangSong  # 中文字体（w:eastAsia）：仿宋
+        western: FangSong  # 西文字体（w:ascii）：仿宋
+      fontSize: {value: 16, unit: pt}  # 字号（w:sz）：三号
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: center  # 对齐（w:jc）：居中
+      lineSpacing:  # 行距（w:spacing）
+        rule: oneAndHalf  # 1.5 倍（w:lineRule）
+
+  # 中文封面密级（Word 样式：中文封面-密级信息）
+  # 指南：未规定密级位置｜用途：封面版心顶部独立行，左对齐密级与保密期限
+  # 备注：公开论文留空，示例为“秘密★5年”；四号黑体单倍行距一行，不另加留白
+  coverSecurity:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimHei  # 中文字体（w:eastAsia）：黑体
+        western: Arial  # 西文字体（w:ascii）：Arial
+      fontSize: {value: 14, unit: pt}  # 字号（w:sz）：四号
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: left  # 对齐（w:jc）：左对齐
+      lineSpacing:  # 行距（w:spacing）
+        rule: single  # 单倍（w:lineRule）
+
+  # 中文封面成文日期（Word 样式：Date）
+  # 指南：2.3.1｜用途：成文打印日期
+  # 备注：固定文本；西文用宋体
+  coverDate:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimSun  # 中文字体（w:eastAsia）：宋体
+        western: SimSun  # 西文字体（w:ascii）：宋体
+      fontSize: {value: 16, unit: pt}  # 字号（w:sz）：三号
+      characterSpacing: {value: 0.5, unit: pt}  # 字间距（w:spacing）
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: center  # 对齐（w:jc）：居中
+      lineSpacing:  # 行距（w:spacing）
+        rule: single  # 单倍（w:lineRule）
+      spaceBefore: {value: 53.85, unit: pt}  # 段前（w:before）
+
+  # 英文封面论文题目（Word 样式：英文封面-论文题目）
+  # 指南：2.3.2｜用途：英文封面题目
+  # 备注：官方：Arial 20pt 加粗
+  coverTitleEnglish:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        western: Arial  # 西文字体（w:ascii）：Arial
+      fontSize: {value: 20, unit: pt}  # 字号（w:sz）：20pt
+      bold: true  # 加粗（w:b）
+      characterSpacing: {value: 0.2, unit: pt}  # 字间距（w:spacing）
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: center  # 对齐（w:jc）：居中
+      lineSpacing:  # 行距（w:spacing）
+        rule: multiple  # 多倍（w:lineRule）
+        amount: {value: 1.25, unit: multiple}
+
+  # 英文封面其他信息（Word 样式：英文封面-论文信息）
+  # 指南：2.3.2｜用途：Thesis submitted to…、学位、学科等
+  # 备注：自定：西文用 Times New Roman（与官方英文封面一致）
+  coverInfoEnglish:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimSun  # 中文字体（w:eastAsia）：宋体
+        western: Times New Roman  # 西文字体（w:ascii）：Times New Roman
+      fontSize: {value: 16, unit: pt}  # 字号（w:sz）：三号
+      characterSpacing: {value: 0.2, unit: pt}  # 字间距（w:spacing）
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: center  # 对齐（w:jc）：居中
+      lineSpacing:  # 行距（w:spacing）
+        rule: oneAndHalf  # 1.5 倍（w:lineRule）
+
+  # 英文封面导师信息（Word 样式：英文封面-导师信息）
+  # 指南：2.3.2｜用途：英文封面导师栏
+  # 备注：自定
+  coverSupervisorEnglish:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontSize: {value: 15, unit: pt}  # 字号（w:sz）：15pt
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: justified  # 对齐（w:jc）：两端对齐
+      tabs:  # 制表位
+        - position: {value: 6.48, unit: cm}
+          alignment: right
+        - position: {value: 6.9, unit: cm}
+          alignment: left
+
+# -----------------------------------------------------------------------------
+# 4.9 其他
+# 包含：authorizationTitle、authorizationText
+# -----------------------------------------------------------------------------
+
+  # 授权说明标题（Word 样式：使用授权说明标题）
+  # 指南：2.3.4｜用途：关于学位论文使用授权的说明
+  # 备注：自定：指南未规定排版
+  authorizationTitle:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontSize: {value: 22, unit: pt}  # 字号（w:sz）：二号
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      spaceBefore: {value: 36, unit: pt}  # 段前（w:before）
+      spaceAfter: {value: 36, unit: pt}  # 段后（w:after）
+
+  # 授权说明文字（Word 样式：使用授权说明文字）
+  # 指南：2.3.4｜用途：授权说明正文
+  # 备注：自定：指南未规定排版
+  authorizationText:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontSize: {value: 14, unit: pt}  # 字号（w:sz）：四号
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: justified  # 对齐（w:jc）：两端对齐
+      firstLineIndent: {value: 2, unit: character}  # 首行缩进 2 字符
+      spaceBefore: {value: 0, unit: pt}  # 段前（w:before）：0
+      spaceAfter: {value: 0, unit: pt}  # 段后（w:after）：0
+      lineSpacing:  # 行距（w:spacing）
+        rule: minimum  # 最小值（w:lineRule）
+        amount: {value: 26, unit: pt}
+
+# -----------------------------------------------------------------------------
+# 4.10 内置列表样式
+# 包含：listNumber1-5、listBullet1-5
+# -----------------------------------------------------------------------------
+
+  # 列表编号 1（Word 样式：List Number）
+  # 指南：2.3.9.3｜用途：编号列表第一级
+  # 备注：内置样式；编号格式 1.（numbering.lists.listNumber1）
+  # 显示名：列表编号1（内置样式替换名）
+  listNumber1:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimSun  # 中文字体（w:eastAsia）：宋体
+        western: Times New Roman  # 西文字体（w:ascii）：Times New Roman
+      fontSize: {value: 12, unit: pt}  # 字号（w:sz）：小四
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: justified  # 对齐（w:jc）：两端对齐
+      lineSpacing:  # 行距（w:spacing）
+        rule: fixed  # 固定值（w:lineRule）
+        amount: {value: 20, unit: pt}
+      spaceBefore: {value: 0, unit: pt}  # 段前（w:before）
+      spaceAfter: {value: 0, unit: pt}  # 段后（w:after）
+      hangingIndent: {value: 2, unit: character}  # 悬挂缩进（w:hangingChars）：首行顶格，续行缩进 2 字符
+
+  # 列表编号 2（Word 样式：List Number 2）
+  # 指南：2.3.9.3｜用途：编号列表第二级
+  # 备注：编号格式 (1)（numbering.lists.listNumber2）
+  # 显示名：列表编号2（内置样式替换名）
+  listNumber2:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimSun  # 中文字体（w:eastAsia）：宋体
+        western: Times New Roman  # 西文字体（w:ascii）：Times New Roman
+      fontSize: {value: 12, unit: pt}  # 字号（w:sz）：小四
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: justified  # 对齐（w:jc）：两端对齐
+      lineSpacing:  # 行距（w:spacing）
+        rule: fixed  # 固定值（w:lineRule）
+        amount: {value: 20, unit: pt}
+      spaceBefore: {value: 0, unit: pt}  # 段前（w:before）
+      spaceAfter: {value: 0, unit: pt}  # 段后（w:after）
+      leftIndent: {value: 2, unit: character}  # 左缩进（w:leftChars）：二级列表整体右移 2 字符
+      hangingIndent: {value: 2, unit: character}  # 悬挂缩进（w:hangingChars）：首行在左缩进处，续行再缩进 2 字符
+
+  # 列表编号 3（Word 样式：List Number 3）
+  # 指南：2.3.9.3｜用途：编号列表第三级
+  # 备注：编号格式 a.（numbering.lists.listNumber3）
+  # 显示名：列表编号3（内置样式替换名）
+  listNumber3:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimSun  # 中文字体（w:eastAsia）：宋体
+        western: Times New Roman  # 西文字体（w:ascii）：Times New Roman
+      fontSize: {value: 12, unit: pt}  # 字号（w:sz）：小四
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: justified  # 对齐（w:jc）：两端对齐
+      lineSpacing:  # 行距（w:spacing）
+        rule: fixed  # 固定值（w:lineRule）
+        amount: {value: 20, unit: pt}
+      spaceBefore: {value: 0, unit: pt}  # 段前（w:before）
+      spaceAfter: {value: 0, unit: pt}  # 段后（w:after）
+      leftIndent: {value: 4, unit: character}  # 左缩进（w:leftChars）：三级列表整体右移 4 字符
+      hangingIndent: {value: 2, unit: character}  # 悬挂缩进（w:hangingChars）：首行在左缩进处，续行再缩进 2 字符
+
+  # 列表项目符号 1（Word 样式：List Bullet）
+  # 指南：2.3.9.3｜用途：项目符号列表第一级
+  # 备注：内置样式；项目符号 •（U+2022，numbering.lists.listBullet1）
+  # 显示名：列表项目符号1（内置样式替换名）
+  listBullet1:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimSun  # 中文字体（w:eastAsia）：宋体
+        western: Times New Roman  # 西文字体（w:ascii）：Times New Roman
+      fontSize: {value: 12, unit: pt}  # 字号（w:sz）：小四
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: justified  # 对齐（w:jc）：两端对齐
+      lineSpacing:  # 行距（w:spacing）
+        rule: fixed  # 固定值（w:lineRule）
+        amount: {value: 20, unit: pt}
+      spaceBefore: {value: 0, unit: pt}  # 段前（w:before）
+      spaceAfter: {value: 0, unit: pt}  # 段后（w:after）
+      hangingIndent: {value: 2, unit: character}  # 悬挂缩进（w:hangingChars）：首行顶格，续行缩进 2 字符
+
+  # 列表项目符号 2（Word 样式：List Bullet 2）
+  # 指南：2.3.9.3｜用途：项目符号列表第二级
+  # 备注：项目符号 ◦（U+25E6，numbering.lists.listBullet2）
+  # 显示名：列表项目符号2（内置样式替换名）
+  listBullet2:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimSun  # 中文字体（w:eastAsia）：宋体
+        western: Times New Roman  # 西文字体（w:ascii）：Times New Roman
+      fontSize: {value: 12, unit: pt}  # 字号（w:sz）：小四
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: justified  # 对齐（w:jc）：两端对齐
+      lineSpacing:  # 行距（w:spacing）
+        rule: fixed  # 固定值（w:lineRule）
+        amount: {value: 20, unit: pt}
+      spaceBefore: {value: 0, unit: pt}  # 段前（w:before）
+      spaceAfter: {value: 0, unit: pt}  # 段后（w:after）
+      leftIndent: {value: 2, unit: character}  # 左缩进（w:leftChars）：二级列表整体右移 2 字符
+      hangingIndent: {value: 2, unit: character}  # 悬挂缩进（w:hangingChars）：首行在左缩进处，续行再缩进 2 字符
+
+  # 列表项目符号 3（Word 样式：List Bullet 3）
+  # 指南：2.3.9.3｜用途：项目符号列表第三级
+  # 备注：项目符号 *（numbering.lists.listBullet3）
+  # 显示名：列表项目符号3（内置样式替换名）
+  listBullet3:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: SimSun  # 中文字体（w:eastAsia）：宋体
+        western: Times New Roman  # 西文字体（w:ascii）：Times New Roman
+      fontSize: {value: 12, unit: pt}  # 字号（w:sz）：小四
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      alignment: justified  # 对齐（w:jc）：两端对齐
+      lineSpacing:  # 行距（Word: w:spacing）
+        rule: fixed  # 固定值（w:lineRule）
+        amount: {value: 20, unit: pt}
+      spaceBefore: {value: 0, unit: pt}  # 段前（w:before）
+      spaceAfter: {value: 0, unit: pt}  # 段后（w:after）
+      leftIndent: {value: 4, unit: character}  # 左缩进（w:leftChars）：三级列表整体右移 4 字符
+      hangingIndent: {value: 2, unit: character}  # 悬挂缩进（w:hangingChars）：首行在左缩进处，续行再缩进 2 字符
+
+# -----------------------------------------------------------------------------
+# 4.11 代码样式
+# 包含：inlineCode、blockCode
+# -----------------------------------------------------------------------------
+
+  # 行内代码（Word 样式：行内代码）（字符样式）
+  # 指南：自定｜用途：正文中的命令、变量、短代码
+  # 备注：仿宋 + Consolas；字符样式，不参与段落格式
+  inlineCode:
+    styleType: character  # 样式类型（w:type）
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: FangSong  # 中文字体（w:eastAsia）：仿宋
+        western: Consolas  # 西文字体（w:ascii）：Consolas
+
+  # 行间代码（Word 样式：行间代码）
+  # 指南：自定｜用途：独立成段的代码块
+  # 备注：仿宋 + Consolas；单倍行距；数字行号；左对齐；不自动调整中西文间距
+  blockCode:
+    characterFormat:  # 字符格式（Word: w:rPr）
+      fontFamily:  # 字体（Word: w:rFonts）
+        chinese: FangSong  # 中文字体（w:eastAsia）：仿宋
+        western: Consolas  # 西文字体（w:ascii）：Consolas
+    paragraphFormat:  # 段落格式（Word: w:pPr）
+      wordWrap: false  # 不允许西文在单词中间换行
+      hyphenation: false  # 本样式不参与自动断字
+      alignment: left  # 对齐（w:jc）：左对齐
+      lineSpacing:  # 行距（w:spacing）
+        rule: single  # 单倍行距
+      spaceBefore: {value: 0, unit: pt}  # 段前 0
+      spaceAfter: {value: 0, unit: pt}  # 段后 0
+      numbering: {list: codeLines, level: 1}  # 行号
+      autoSpaceDE: false  # 不自动调整西文与中文间距
+      autoSpaceDN: false  # 不自动调整数字与中文间距
+
+
+# =============================================================================
+# 5. numbering — 编号
+# =============================================================================
+numbering:
+  lists:
+    outline:  # 正文标题编号（章/节共用同一列表）
+      levels:
+        1: {format: decimal, text: "第%1章　", suffix: none, start: 1}  # 第1章
+        2: {format: decimal, text: "%1.%2　", suffix: none, start: 1}
+        3: {format: decimal, text: "%1.%2.%3　", suffix: none, start: 1}
+        4: {format: decimal, text: "%1.%2.%3.%4　", suffix: none, start: 1}
+    appendix:  # 附录编号
+      levels:
+        1: {format: upperLetter, text: "附录%1　", suffix: none, start: 1}
+        2: {format: decimal, text: "%1.%2　", suffix: none, start: 1}
+        3: {format: decimal, text: "%1.%2.%3　", suffix: none, start: 1}
+        4: {format: decimal, text: "%1.%2.%3.%4　", suffix: none, start: 1}
+    references:  # 参考文献编号
+      levels:
+        1: {format: decimal, text: "[%1]", suffix: tab, start: 1}
+    achievements:  # 个人成果编号（与参考文献独立，从 1 开始）
+      levels:
+        1: {format: decimal, text: "[%1]", suffix: tab, start: 1}
+    appendixReferences:  # 附录参考文献编号
+      levels:
+        1: {format: decimal, text: "[%1]", suffix: tab, start: 1}
+    codeLines:  # 行间代码行号
+      levels:
+        1: {format: decimal, text: "%1", suffix: tab, start: 1}
+    listNumber1:  # 有序列表：1.
+      levels:
+        1: {format: decimal, text: "%1.", suffix: tab, start: 1}
+    listNumber2:  # 有序列表：(1)
+      levels:
+        1: {format: decimal, text: "(%1)", suffix: tab, start: 1}
+    listNumber3:  # 有序列表：a.
+      levels:
+        1: {format: lowerLetter, text: "%1.", suffix: tab, start: 1}
+    listBullet1:  # 无序列表：黑色实心圆点
+      levels:
+        1: {format: bullet, text: "•", suffix: tab, start: 1, font: Times New Roman}
+    listBullet2:  # 无序列表：黑色空心圆点
+      levels:
+        1: {format: bullet, text: "◦", suffix: tab, start: 1, font: Times New Roman}
+    listBullet3:  # 无序列表：星号
+      levels:
+        1: {format: bullet, text: "*", suffix: tab, start: 1, font: Times New Roman}
+
+# =============================================================================
+# 6. captions — 题注
+# =============================================================================
+captions:
+  defaults:  # 题注标签/编号/题名间距
+    labelGap: ""  # 标签与编号之间（无空格）
+    titleGap: "　"  # 编号与题名之间（全角空格）
+  equation:  # 正文公式编号（公式居中，编号右行末）
+    # 括号采用半角：与 Word 域、公式宏的 #() 写法一致；《指南》2.3.19 半角/全角均合法。
+    numberSource: 'STYLEREF 1 \s'  # 章号来源
+    separator: "."
+    field: 'SEQ 式 \* ARABIC \s 1'
+    prefix: "("
+    suffix: ")"
+    position: right
+  figure:  # 图注
+    label: "图"
+    field: 'SEQ 图 \* ARABIC \s 1'
+    position: below
+  table:  # 表注
+    label: "表"
+    field: 'SEQ 表 \* ARABIC \s 1'
+    position: above
+  subfigure:  # 子图题注
+    pattern: "({letter})"
+    position: below
+  appendixFigure:  # 附录图题注（官方示例 图A.1）
+    label: "图"
+    letterSource: 'STYLEREF 附录标题 1'  # 附录字母来源（“附录A”）
+    separator: "."
+    field: 'SEQ 图 \* ARABIC \s 1'  # 附录内图序号，按附录重置
+  appendixTable:  # 附录表题注（官方示例 表A.1）
+    label: "表"
+    letterSource: 'STYLEREF 附录标题 1'  # 附录字母来源（“附录A”）
+    separator: "."
+    field: 'SEQ 表 \* ARABIC \s 1'  # 附录内表序号，按附录重置
+  appendixEquation:  # 附录公式编号（官方示例 (A.1)）
+    letterSource: 'STYLEREF 附录标题 1'  # 附录字母来源（“附录A”）
+    separator: "."
+    field: 'SEQ 式 \* ARABIC \s 1'  # 附录内公式序号，按附录重置
+    prefix: "("
+    suffix: ")"
+  continuedTable:  # 续表题注
+    prefix: ""
+    suffix: "（续）"
+    repeatHeader: true
+  englishFigure:  # 英文图题注（自定）
+    label: Figure
+  englishTable:  # 英文表题注（自定）
+    label: Table
+
+# =============================================================================
+# 7. tables — 表格
+# =============================================================================
+tables:
+  default: threeLine  # 默认表格样式
+  captionStyle: tableCaption  # 表注样式（表上方）
+  noteStyle: figureTableNote  # 图表附注样式（图/表下方）
+  threeLine:  # 三线表（指南 2.3.19）
+    style: threeLineTable  # 对应 Word 表格样式（三线表）
+    tableBorders:
+      top: {style: single, width: {value: 1.5, unit: pt}}
+      bottom: {style: single, width: {value: 1.5, unit: pt}}
+      left: {style: none}
+      right: {style: none}
+      insideHorizontal: {style: none}
+      insideVertical: {style: none}
+    firstRowBorders:  # 首行条件边框（w:tblStylePr type=firstRow）
+      bottom: {style: single, width: {value: 1, unit: pt}}
+    alignment: center  # 表格居中
+    auxiliaryLines: allowed  # 必要时可加辅助线（指南 2.3.19）
+    headerRow:
+      repeatOnNewPage: true  # 跨页时重复表头行
+  cellText:  # 表格单元格文字
+    style: tableText  # 唯一定义在 styles.tableText（表格文字）；这里只声明引用
+  imageContainer:  # 图片容器表（自定）
+    tableBorders:
+      top: {style: none}
+      bottom: {style: none}
+      left: {style: none}
+      right: {style: none}
+      insideHorizontal: {style: none}
+      insideVertical: {style: none}
+
+# =============================================================================
+# 8. footnotes — 脚注
+# =============================================================================
+footnotes:
+  text: {style: footnoteText}  # 脚注文本样式
+  numbering: {format: circledDecimal, restart: eachPage}  # ①②③，每页重编
+  referenceMarker: superscript  # 正文中脚注序号为上标
+  textMarker: normal  # 脚注文本中的编号为普通文本
+
+# =============================================================================
+# 9. headersAndFooters — 页眉页脚与页码
+# =============================================================================
+headersAndFooters:
+  header:
+    content: none  # 本科规范：页眉无（全篇不留页眉）
+    style: none
+  pageNumber:
+    style: footer
+    position: footerCenter
+    frontMatterFormat: upperRoman  # 摘要至符号说明
+    bodyFormat: decimal  # 正文至末
+
+# =============================================================================
+# 10. cover — 封面
+# =============================================================================
+cover:
+  chinese:
+    title: {style: coverTitleChinese}  # 论文题目（必填）
+    degreeInfo: {style: coverDegreeInfo}  # 学位类别/学科门类（必填）
+    authorInfo:  # 培养单位/学科/作者/导师（必填）
+      style: coverAuthorInfo
+      colonCentered: true  # 作者信息以冒号为中心对齐
+      colonCenter: {value: 259.2, unit: pt}  # 冒号中心距页面左边缘
+      labelAlignment: right  # 冒号左侧标签右对齐
+      valueAlignment: left  # 冒号右侧内容左对齐
+      labelRightTab: {value: 184.5, unit: pt}  # 表格加宽后保持作者信息的水平位置
+      valueLeftTab: {value: 189.5, unit: pt}
+    date: {style: coverDate, source: fixedText}  # 成文日期（必填，固定文本）
+    securityLevel: {style: coverSecurity}  # 表格首行密级控件（可选；默认空白）
+    layout:  # 中文封面整页固定表格（无框线；行高单位 pt）
+      type: fixedTable
+      width: {value: 14.8, unit: cm}  # 与版心一致：21 - 3 - 3 - 0.2cm 装订线
+      topSpace: {value: 21, unit: pt}  # logo 段前留白，计入第一行高度；参考 ThuThesis 的 21bp
+      rows:  # 自上而下；作者与日期位置按官方本科示例校准
+        - {role: security, height: {value: 18.2, unit: pt}}  # 四号黑体单倍行距一行，段前后为 0
+        - {role: logo, height: {value: 101, unit: pt}}  # 21pt 段前 + 80pt logo 行
+        - {role: spacer, height: {value: 18, unit: pt}}
+        - {role: trainingTitle, height: {value: 50, unit: pt}}
+        - {role: spacer, height: {value: 26, unit: pt}}
+        - {role: title, height: {value: 136, unit: pt}}  # 参考 ThuThesis 的 136bp 题目区
+        - {role: spacer, height: {value: 16.5, unit: pt}}
+        - {role: authorInfo, height: {value: 156, unit: pt}}  # 6 段 × 26pt
+        - {role: spacer, height: {value: 47.3, unit: pt}}  # 缩短一行（18.2pt），使日期保持原位
+        - {role: date, height: {value: 40, unit: pt}}
+
+# =============================================================================
+# 11. documentParts — 论文各部分
+# =============================================================================
+documentParts:
+  authorization:  # 授权说明
+    heading: {style: authorizationTitle}
+    body: {style: authorizationText}
+  abstract:  # 摘要
+    heading: {style: chapterTitleUnnumbered}
+    body: {style: body}
+  abstractEnglish:  # Abstract
+    heading: {style: chapterTitleUnnumbered}
+    body: {style: body}
+  tableOfContents: {heading: {style: chapterTitleUnnumbered, outlineLevel: bodyText}, levels: 3}  # 目录从正文收录
+  listOfFigures: {heading: {style: chapterTitleUnnumbered}}  # 插图清单
+  listOfTables: {heading: {style: chapterTitleUnnumbered}}  # 附表清单
+  symbols: {heading: {style: chapterTitleUnnumbered}}  # 符号和缩略语说明
+  references: {heading: {style: chapterTitleUnnumbered}}  # 参考文献
+  appendix:
+    heading: {style: appendixTitle}  # 附录A
+    sectionLevel1: {style: appendixSectionTitle1}
+  acknowledgements: {heading: {style: chapterTitleUnnumbered}}  # 致谢
+  declaration: {heading: {style: chapterTitleUnnumbered}}  # 声明
+  researchAchievements:  # 在学期间参加课题的研究成果：学术论文/专著译著/专利/作品/研究报告/其他
+    heading: {style: chapterTitleUnnumbered}
+    sectionStyle: sectionTitleUnnumbered
+  appendixReferences: {heading: {style: sectionTitleUnnumbered}}  # 附录内参考文献小节（无编号、无大纲、居中）
+
+# =============================================================================
+# 12. appendix — 纯注释
+# =============================================================================
+# 12.1 Word XML 对照
+#   paragraphFormat ≈ w:pPr；characterFormat ≈ w:rPr
+#   alignment ≈ w:jc；lineSpacing ≈ w:spacing/@w:line + @w:lineRule
+#   pageMargins ≈ w:pgMar；numbering ≈ w:numPr；tableBorders ≈ w:tblBorders
+#   fontSize ≈ w:sz；outlineLevel ≈ w:outlineLvl（规则 1 起，XML 0 起）

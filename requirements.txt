@@ -1,0 +1,6 @@
+python-docx>=1.1
+PyYAML
+pywin32; sys_platform == "win32"
+lxml
+pyOpenVBA~=6.6.0
+pypdf>=7.1

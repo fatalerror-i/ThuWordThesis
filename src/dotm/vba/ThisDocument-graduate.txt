@@ -1,0 +1,67 @@
+Option Explicit
+
+' 本文件的代码由构建脚本 src/build_dotm.py 写入 ThisDocument 模块，请勿手改。
+' 选择确认时同步学位；退出控件事件保留为补充入口。
+
+Private WithEvents mWord As Word.Application
+
+Private Sub Document_Open()
+    Set mWord = Word.Application
+End Sub
+
+Private Sub Document_New()
+    Set mWord = Word.Application
+End Sub
+
+Private Sub Document_ContentControlOnEnter(ByVal ContentControl As ContentControl)
+    Set mWord = Word.Application
+End Sub
+
+' 事件源在模板中持续存活，只处理本模板及以它为附加模板的写作稿。
+Private Function OwnsDocument(ByVal doc As Document) As Boolean
+    On Error GoTo Done
+    If doc Is ThisDocument Then
+        OwnsDocument = True
+    Else
+        OwnsDocument = (doc.AttachedTemplate.FullName = ThisDocument.FullName)
+    End If
+Done:
+End Function
+
+Private Sub mWord_WindowSelectionChange(ByVal Sel As Selection)
+    On Error GoTo Failed
+    If modCover.CoverUpdateInProgress Then Exit Sub
+    If Not OwnsDocument(Sel.Document) Then Exit Sub
+    If Not (Sel.Document Is ActiveDocument) Then Exit Sub
+    modCover.RefreshDegreeIfChanged
+    Exit Sub
+Failed:
+    modCover.ReportCascadeError Err.Number, Err.Description
+End Sub
+
+Private Sub mWord_DocumentBeforeSave(ByVal Doc As Document, SaveAsUI As Boolean, Cancel As Boolean)
+    On Error GoTo Failed
+    If modCover.CoverUpdateInProgress Then Exit Sub
+    If Not OwnsDocument(Doc) Then Exit Sub
+    If Doc Is ActiveDocument Then modCover.RefreshDegreeIfChanged
+    Exit Sub
+Failed:
+    modCover.ReportCascadeError Err.Number, Err.Description
+End Sub
+
+Private Sub Document_ContentControlOnExit( _
+        ByVal ContentControl As ContentControl, Cancel As Boolean)
+    On Error GoTo Failed
+    If modCover.CoverUpdateInProgress Then Exit Sub
+    Select Case ContentControl.Tag
+        Case "学位类别"
+            modCover.ApplyDegreeCascade ContentControl
+        Case "密级"
+            modCover.SyncPublicDeclaration
+        Case "成文日期"
+            modCover.ApplyDateCascade ContentControl
+    End Select
+    Exit Sub
+Failed:
+    modCover.ReportCascadeError Err.Number, Err.Description
+End Sub

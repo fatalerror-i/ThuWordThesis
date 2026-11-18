@@ -1,0 +1,43 @@
+Option Explicit
+
+Private Sub UserForm_Initialize()
+    On Error GoTo EH
+    LoadPickerForm Me
+    PickerApplyChrome Me
+    PickerLayout Me
+    Exit Sub
+EH:
+    MsgBox "选择窗体初始化失败：" & Err.Number & " " & Err.Description, vbExclamation, "选择条目"
+    Unload Me
+End Sub
+
+Private Sub UserForm_Activate()
+    On Error Resume Next
+    PickerMakeResizable Me
+    PickerSyncLayout Me
+End Sub
+
+' 拖动窗口边缘时由窗体触发布局
+Private Sub UserForm_Resize()
+    On Error Resume Next
+    PickerSyncLayout Me
+End Sub
+
+Private Sub btnOK_Click()
+    AcceptPickerForm Me
+    Unload Me
+End Sub
+
+Private Sub lstItems_MouseUp(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+    If Button = 1 Then UpdatePickerSelection Me
+End Sub
+
+Private Sub lstItems_KeyUp(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
+    If KeyCode = vbKeySpace Then UpdatePickerSelection Me
+End Sub
+
+Private Sub btnCancel_Click()
+    gPickerAccepted = False
+    Unload Me
+End Sub
+

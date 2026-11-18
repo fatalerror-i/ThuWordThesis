@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui">
+  <ribbon>
+    <tabs>
+      <tab id="THUThesisTab" label="论文">
+        <group id="grpCover" label="封面">
+          <menu id="mnuOptionalInfo" imageMso="FilePrepareMenu" label="选填信息" size="large"
+                screentip="封面选填信息"
+                supertip="填写或清空封面版心顶部独立行的密级信息。">
+            <button id="btnSecurity" label="密级信息" onAction="ToggleSecurity"
+                    screentip="密级信息"
+                    supertip="添加或移除密级信息，默认文字为秘密★5年。"/>
+          </menu>
+        </group>
+
+        <group id="grpStructure" label="段落">
+          <menu id="mnuChapter" imageMso="TextFromFileInsert" label="正文章节" size="large"
+                screentip="正文章节"
+                supertip="将段落设为带编号的章标题或节标题。">
+            <button id="btnChapterTitle" label="章标题" tag="章标题（有编号）"
+                    onAction="ApplyHeadingStyle" screentip="章标题"
+                    supertip="将当前段落设为带编号的章标题。"/>
+            <button id="btnSection1" label="一级节标题" tag="一级节标题"
+                    onAction="ApplyHeadingStyle" screentip="一级节标题"
+                    supertip="将当前段落设为一级节标题，如2.1。"/>
+            <button id="btnSection2" label="二级节标题" tag="二级节标题"
+                    onAction="ApplyHeadingStyle" screentip="二级节标题"
+                    supertip="将当前段落设为二级节标题，如2.1.1。"/>
+            <button id="btnSection3" label="三级节标题" tag="三级节标题"
+                    onAction="ApplyHeadingStyle" screentip="三级节标题"
+                    supertip="将当前段落设为三级节标题，如2.1.1.1。"/>
+          </menu>
+          <menu id="mnuAppendix" imageMso="BodyTextHide" label="附录章节" size="normal"
+                screentip="附录章节"
+                supertip="将段落设为附录标题或节标题。">
+            <button id="btnAppendixTitle" label="附录标题" tag="附录标题"
+                    onAction="ApplyHeadingStyle" screentip="附录标题"
+                    supertip="将当前段落设为附录标题，如附录A。"/>
+            <button id="btnAppendixSection1" label="附录一级节标题" tag="附录一级节标题"
+                    onAction="ApplyHeadingStyle" screentip="附录一级节标题"
+                    supertip="将当前段落设为附录一级节标题，如A.1。"/>
+            <button id="btnAppendixSection2" label="附录二级节标题" tag="附录二级节标题"
+                    onAction="ApplyHeadingStyle" screentip="附录二级节标题"
+                    supertip="将当前段落设为附录二级节标题，如A.1.1。"/>
+            <button id="btnAppendixSection3" label="附录三级节标题" tag="附录三级节标题"
+                    onAction="ApplyHeadingStyle" screentip="附录三级节标题"
+                    supertip="将当前段落设为附录三级节标题，如A.1.1.1。"/>
+          </menu>
+          <menu id="mnuOtherSection" imageMso="TextFromFileInsert" label="其他章节" size="normal"
+                screentip="其他章节"
+                supertip="插入无编号的章标题或章内小节标题。">
+            <button id="btnOtherChapter" label="章标题"
+                    onAction="InsertOtherSection"
+                    screentip="插入无编号章标题"
+                    supertip="为摘要、目录、致谢等部分插入标题。"/>
+            <button id="btnUnnumberedSubsection" label="章内无编号小节"
+                    onAction="InsertUnnumberedSubsection"
+                    screentip="插入章内无编号小节"
+                    supertip="插入居中显示的无编号小节标题。"/>
+          </menu>
+          <button id="btnBodyText" imageMso="FontDialog" label="正文" tag="正文"
+                  onAction="ApplyBodyStyle" screentip="应用正文样式"
+                  supertip="将当前段落或所选段落设为正文。"/>
+        </group>
+
+        <group id="grpFormat" label="字体">
+          <menu id="mnuEmphasis" imageMso="StylesPane" label="强调" size="large"
+                screentip="强调"
+                supertip="为所选文字应用强调样式。">
+            <button id="btnSubtleEmphasis" label="不明显强调"
+                    tag="Subtle Emphasis" onAction="ApplyEmphasis"
+                    screentip="不明显强调"
+                    supertip="为所选文字应用较轻的强调样式。"/>
+            <button id="btnEmphasis" label="强调"
+                    tag="Emphasis" onAction="ApplyEmphasis"
+                    screentip="强调"
+                    supertip="将所选文字设为加粗的强调样式。"/>
+            <button id="btnStrong" label="明显强调"
+                    tag="Strong" onAction="ApplyEmphasis"
+                    screentip="明显强调"
+                    supertip="为所选文字应用更醒目的强调样式。"/>
+          </menu>
+        </group>
+
+        <group id="grpLists" label="列表">
+          <menu id="mnuOrderedList" imageMso="NumberingGalleryWord" label="有序列表" size="large"
+                screentip="有序列表"
+                supertip="将段落设为编号列表。">
+            <button id="btnListNumber1" label="1." tag="List Number"
+                    onAction="ApplyListStyle" screentip="一级编号列表"
+                    supertip="使用1.、2.、3.等编号。"/>
+            <button id="btnListNumber2" label="(1)" tag="List Number 2"
+                    onAction="ApplyListStyle" screentip="二级编号列表"
+                    supertip="使用(1)、(2)、(3)等编号。"/>
+            <button id="btnListNumber3" label="a." tag="List Number 3"
+                    onAction="ApplyListStyle" screentip="三级编号列表"
+                    supertip="使用a.、b.、c.等编号。"/>
+          </menu>
+          <menu id="mnuBulletList" imageMso="BulletsGalleryWord" label="无序列表" size="large"
+                screentip="无序列表"
+                supertip="将段落设为项目符号列表。">
+            <button id="btnListBullet1" label="•" tag="List Bullet"
+                    onAction="ApplyListStyle" screentip="一级项目符号列表"
+                    supertip="使用实心圆点作为项目符号。"/>
+            <button id="btnListBullet2" label="◦" tag="List Bullet 2"
+                    onAction="ApplyListStyle" screentip="二级项目符号列表"
+                    supertip="使用空心圆点作为项目符号。"/>
+            <button id="btnListBullet3" label="*" tag="List Bullet 3"
+                    onAction="ApplyListStyle" screentip="三级项目符号列表"
+                    supertip="使用星号作为项目符号。"/>
+          </menu>
+          <menu id="mnuReferenceFormat" imageMso="LabelInsert" label="参考文献"
+                size="normal"
+                screentip="参考文献格式"
+                supertip="将段落设为顺序编码制或著者出版年制文献条目。">
+            <button id="btnReferenceNumeric" label="顺序编码制"
+                    tag="numeric" onAction="ApplyReferenceList"
+                    screentip="顺序编码制"
+                    supertip="为文献条目添加方括号编号。"/>
+            <button id="btnReferenceAuthorYear" label="著者出版年制"
+                    tag="author-year" onAction="ApplyReferenceList"
+                    screentip="著者出版年制"
+                    supertip="将文献条目设为按著者与出版年引用的格式。"/>
+          </menu>
+          <button id="btnSymbolEntry" imageMso="SymbolInsertGallery" label="缩略语"
+                  onAction="InsertSymbolEntry"
+                  screentip="插入缩略语条目"
+                  supertip="添加包含缩略语及其说明的条目。"/>
+          <menu id="mnuAdjustNumbering" imageMso="NumberingRestart" label="调整编号" size="normal"
+                screentip="调整列表编号"
+                supertip="继续上方列表的编号，或从1重新编号。">
+            <button id="btnListContinue" label="继续编号"
+                    onAction="ContinueListNumbering"
+                    screentip="继续编号"
+                    supertip="接续上方列表的编号。"/>
+            <button id="btnListRestart" label="重新开始于1"
+                    onAction="RestartListAtOne"
+                    screentip="从1重新编号"
+                    supertip="将当前列表从1重新编号。"/>
+          </menu>
+        </group>
+
+        <group id="grpFigure" label="图片">
+          <button id="btnInsertPicture" imageMso="PictureInsertFromFile" label="插入图片" size="large"
+                  onAction="InsertPicture"
+                  screentip="插入图片"
+                  supertip="从文件插入嵌入型图片，并应用图片样式。"/>
+          <button id="btnFigureCaption" imageMso="CaptionInsert" label="图注"
+                  onAction="InsertFigureCaption"
+                  screentip="添加图注"
+                  supertip="将所选文字或当前段落设为带编号的图注。"/>
+          <button id="btnSubfigureCaption" imageMso="CaptionInsert" label="子图注" size="normal"
+                  onAction="InsertSubfigureCaption"
+                  screentip="添加子图注"
+                  supertip="将所选文字或当前段落设为以(a)、(b)等字母编号的子图注。"/>
+        </group>
+
+        <group id="grpTable" label="表格">
+          <button id="btnInsertTable" imageMso="TableInsertGallery" label="插入表格" size="large"
+                  onAction="InsertTable"
+                  screentip="插入三线表"
+                  supertip="选择行数和列数以插入三线表。"/>
+          <button id="btnTableCaption" imageMso="CaptionInsert" label="表注"
+                  onAction="InsertTableCaption"
+                  screentip="添加表注"
+                  supertip="将所选文字或当前段落设为带编号的表注。"/>
+          <!-- 项目不提供续表题注；保留原入口供维护时参考。
+          <button id="btnContinuedTable" imageMso="TableRepeatHeaderRows" label="续表"
+                  onAction="InsertContinuedTableCaption"
+                  screentip="添加续表题注"
+                  supertip="添加沿用主表编号的续表题注。"/>
+          -->
+        </group>
+
+        <group id="grpFormula" label="公式">
+          <button id="btnInlineFormula" imageMso="EquationScriptGallery" label="行内公式" size="large"
+                  onAction="InsertInlineFormula"
+                  screentip="行内公式"
+                  supertip="在段落中插入公式，或调整现有行内公式。"/>
+          <menu id="mnuDisplayFormula" imageMso="TableFormulaDialog" label="行间公式" size="large"
+                screentip="行间公式"
+                supertip="插入独立成行的公式，可选择是否编号。">
+            <button id="btnDisplayFormulaNumbered" label="有编号"
+                    onAction="InsertDisplayFormula"
+                    screentip="有编号的行间公式"
+                    supertip="插入或调整带自动编号的行间公式。"/>
+            <button id="btnDisplayFormulaPlain" label="无编号"
+                    onAction="InsertDisplayFormulaPlain"
+                    screentip="无编号的行间公式"
+                    supertip="插入或调整无编号的行间公式。"/>
+          </menu>
+        </group>
+
+        <group id="grpCode" label="代码">
+          <button id="btnInlineCode" imageMso="FieldCodes" label="行内代码"
+                  onAction="InsertInlineCode"
+                  screentip="行内代码"
+                  supertip="为所选文字应用行内代码样式。"/>
+          <button id="btnBlockCode" imageMso="GroupCode" label="行间代码"
+                  onAction="InsertBlockCode"
+                  screentip="行间代码"
+                  supertip="将当前段落设为带行号的代码。"/>
+        </group>
+
+        <group id="grpReferences" label="引用">
+          <menu id="mnuCrossRef" imageMso="CrossReferenceInsert" label="引用内容" size="large"
+                screentip="插入交叉引用"
+                supertip="引用图、表、公式或章节的编号。">
+            <button id="btnRefFigure" label="引用图" tag="figure"
+                    onAction="InsertCrossReference"
+                    screentip="引用图"
+                    supertip="选择插图并插入其编号。"/>
+            <button id="btnRefTable" label="引用表" tag="table"
+                    onAction="InsertCrossReference"
+                    screentip="引用表"
+                    supertip="选择表格并插入其编号。"/>
+            <button id="btnRefFormula" label="引用公式" tag="formula"
+                    onAction="InsertCrossReference"
+                    screentip="引用公式"
+                    supertip="选择带编号的公式并插入其编号。"/>
+            <button id="btnRefChapter" label="引用章节" tag="chapter"
+                    onAction="InsertCrossReference"
+                    screentip="引用章节"
+                    supertip="选择章节并插入其编号。"/>
+          </menu>
+          <button id="btnCitation" imageMso="CitationInsert" label="引用文献" size="large"
+                  onAction="ShowCitationDialog"
+                  screentip="引用文献"
+                  supertip="选择一条或多条参考文献，插入上标引文。"/>
+          <button id="btnFootnote" label="脚注" size="large"
+                  imageMso="FootnoteInsert"
+                  onAction="InsertFootnote"
+                  screentip="插入脚注"
+                  supertip="在光标位置添加脚注标记。"/>
+          <button id="btnUpdateFields" imageMso="FileStartWorkflow" label="更新域" size="large"
+                  onAction="UpdateAllFields"
+                  screentip="更新域"
+                  supertip="更新目录、题注、公式编号和引用。"/>
+          <button id="btnTemplateCheck" label="引用检查" size="large"
+                  imageMso="FieldsUpdate"
+                  onAction="RunTemplateCheck"
+                  screentip="引用检查"
+                  supertip="检查图表题注、交叉引用和文献引用。"/>
+        </group>
+
+        <group id="grpExport" label="导出">
+          <menu id="mnuExport" imageMso="FileSaveAs" label="导出" size="large"
+                screentip="导出提交版"
+                supertip="将论文导出为DOCX或PDF。">
+            <button id="btnExportDocx" label="导出为 DOCX" imageMso="FileSaveAsWordDocx" onAction="ExportDocx"
+                    screentip="导出为 DOCX"
+                    supertip="生成可编辑的Word提交版。"/>
+            <button id="btnExportPdf" label="导出为 PDF" imageMso="FileSaveAsPdfOrXps" onAction="ExportPdf"
+                    screentip="导出为 PDF"
+                    supertip="生成固定版式的PDF提交版。"/>
+          </menu>
+        </group>
+
+        <group id="grpHelp" label="帮助">
+          <button id="btnAbout" imageMso="About" label="关于" size="large"
+                  onAction="ShowAbout"
+                  screentip="关于模板"
+                  supertip="查看模板名称和版本。"/>
+        </group>
+      </tab>
+    </tabs>
+  </ribbon>
+</customUI>
